@@ -11,9 +11,9 @@ const googleDriveLinks = {
     'Applied Physics': 'https://drive.google.com/drive/folders/13ke3PZAf5H21Z3HIf4FQvB8bMcVZBs93?usp=drive_link' ,
     'ICT': 'https://drive.google.com/drive/folders/1x8lD7BH50vg2rp4a3HP1FhkDi13jGP6v?usp=drive_link',
     'Programming': 'https://drive.google.com/drive/folders/1DoPFcos3djeXszOefTcC4G7plo4uHtr5?usp=drive_link',
-    'English': 'https://drive.google.com/drive/folders/YOUR_ENGLISH_FOLDER_ID',
+    'English': 'https://drive.google.com/drive/folders/1IE_KnH00f7GlonHLqB95XnIqoNkCK55D?usp=sharing',
     'Calculus': 'https://drive.google.com/drive/folders/1mDXAb3eBUAU3ArwzZizLijP_WzK5xP9s?usp=drive_link',
-    'Islamiat': 'https://drive.google.com/drive/folders/YOUR_ISLAMIAT_FOLDER_ID'
+    'Islamiat': 'https://drive.google.com/drive/folders/105zMzsX1MnyAT9P6NMxMMiaxymNdiblC?usp=sharing'
 };
 
 // Handle card link clicks

@@ -8,11 +8,11 @@ AOS.init({
 
 // Google Drive folder links - REPLACE THESE WITH YOUR ACTUAL LINKS
 const googleDriveLinks = {
-    'Applied Physics': 'https://drive.google.com/drive/folders/YOUR_PHYSICS_FOLDER_ID',
-    'ICT': 'https://drive.google.com/drive/folders/YOUR_ICT_FOLDER_ID',
-    'Programming': 'https://drive.google.com/drive/folders/YOUR_PROGRAMMING_FOLDER_ID',
+    'Applied Physics': 'https://drive.google.com/drive/folders/13ke3PZAf5H21Z3HIf4FQvB8bMcVZBs93?usp=drive_link
+    'ICT': 'https://drive.google.com/drive/folders/1x8lD7BH50vg2rp4a3HP1FhkDi13jGP6v?usp=drive_link',
+    'Programming': 'https://drive.google.com/drive/folders/1DoPFcos3djeXszOefTcC4G7plo4uHtr5?usp=drive_link',
     'English': 'https://drive.google.com/drive/folders/YOUR_ENGLISH_FOLDER_ID',
-    'Calculus': 'https://drive.google.com/drive/folders/YOUR_CALCULUS_FOLDER_ID',
+    'Calculus': 'https://drive.google.com/drive/folders/1mDXAb3eBUAU3ArwzZizLijP_WzK5xP9s?usp=drive_link',
     'Islamiat': 'https://drive.google.com/drive/folders/YOUR_ISLAMIAT_FOLDER_ID'
 };
 

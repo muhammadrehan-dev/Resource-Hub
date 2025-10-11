@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://25fcyber.netlify.app/sitemap.xml

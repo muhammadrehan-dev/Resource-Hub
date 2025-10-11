@@ -1,0 +1,26 @@
+{
+  "name": "DUET Resource Hub - 25F Cyber A2",
+  "short_name": "25F Cyber",
+  "description": "Resource hub for Batch 25F Cybersecurity A2 at DUET",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#00bcd4",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}

@@ -67,6 +67,41 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+        // Fun loading messages
+        const messages = [
+            "Loading your resources",
+            "Fetching course materials",
+            "Preparing your study hub",
+            "Cyber mode: Activated",
+            "Compiling knowledge base",
+            "Hacking into the mainframe... JK!",
+            "Loading awesomeness",
+            "Brewing some code coffee",
+            "Almost there, champ!"
+        ];
+
+        let messageIndex = 0;
+        const messageElement = document.getElementById('loadingMessage');
+
+        // Rotate messages
+        const messageInterval = setInterval(() => {
+            messageIndex = (messageIndex + 1) % messages.length;
+            messageElement.textContent = messages[messageIndex];
+        }, 2000);
+
+        // Hide skeleton after page loads (simulate loading)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                clearInterval(messageInterval);
+                document.getElementById('skeletonLoader').classList.add('hidden');
+                
+                // Remove skeleton from DOM after animation
+                setTimeout(() => {
+                    document.getElementById('skeletonLoader').remove();
+                }, 500);
+            }, 1500); // Adjust this delay as needed
+        });
+
 // Console message for developers
 console.log('%c🎓 DUET Resource Hub', 'color: #00bcd4; font-size: 24px; font-weight: bold;');
 console.log('%cBatch 25F | Cybersecurity A2', 'color: #0097a7; font-size: 16px; font-weight: bold;');

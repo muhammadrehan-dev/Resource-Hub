@@ -6,9 +6,9 @@ AOS.init({
     offset: 100
 });
 
-// Google Drive folder links - REPLACE THESE WITH YOUR ACTUAL LINKS
+// Google Drive folder links
 const googleDriveLinks = {
-    'Applied Physics': 'https://drive.google.com/drive/folders/13ke3PZAf5H21Z3HIf4FQvB8bMcVZBs93?usp=drive_link' ,
+    'Applied Physics': 'https://drive.google.com/drive/folders/13ke3PZAf5H21Z3HIf4FQvB8bMcVZBs93?usp=drive_link',
     'ICT': 'https://drive.google.com/drive/folders/1x8lD7BH50vg2rp4a3HP1FhkDi13jGP6v?usp=drive_link',
     'Programming': 'https://drive.google.com/drive/folders/1DoPFcos3djeXszOefTcC4G7plo4uHtr5?usp=drive_link',
     'English': 'https://drive.google.com/drive/folders/1IE_KnH00f7GlonHLqB95XnIqoNkCK55D?usp=sharing',
@@ -16,8 +16,50 @@ const googleDriveLinks = {
     'Islamiat': 'https://drive.google.com/drive/folders/105zMzsX1MnyAT9P6NMxMMiaxymNdiblC?usp=sharing'
 };
 
-// Handle card link clicks
+// Skeleton Loader Logic
 document.addEventListener('DOMContentLoaded', function() {
+    // Fun loading messages
+    const messages = [
+        "Loading your resources",
+        "Fetching course materials",
+        "Preparing your study hub",
+        "Cyber mode: Activated",
+        "Compiling knowledge base",
+        "Hacking into the mainframe... JK!",
+        "Loading awesomeness",
+        "Brewing some code coffee",
+        "Almost there, champ!"
+    ];
+
+    let messageIndex = 0;
+    const messageElement = document.getElementById('loadingMessage');
+    let messageInterval;
+
+    // Only start rotating messages if element exists
+    if (messageElement) {
+        messageInterval = setInterval(() => {
+            messageIndex = (messageIndex + 1) % messages.length;
+            messageElement.textContent = messages[messageIndex];
+        }, 2000);
+    }
+
+    // Hide skeleton after page loads
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if (messageInterval) clearInterval(messageInterval);
+            const skeletonLoader = document.getElementById('skeletonLoader');
+            if (skeletonLoader) {
+                skeletonLoader.classList.add('hidden');
+                
+                // Remove skeleton from DOM after animation
+                setTimeout(() => {
+                    skeletonLoader.remove();
+                }, 500);
+            }
+        }, 1500); // Shows skeleton for 1.5 seconds after page load
+    });
+
+    // Handle card link clicks
     const cardLinks = document.querySelectorAll('.card-link');
     
     cardLinks.forEach(link => {
@@ -66,41 +108,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
-        // Fun loading messages
-        const messages = [
-            "Loading your resources",
-            "Fetching course materials",
-            "Preparing your study hub",
-            "Cyber mode: Activated",
-            "Compiling knowledge base",
-            "Hacking into the mainframe... JK!",
-            "Loading awesomeness",
-            "Brewing some code coffee",
-            "Almost there, champ!"
-        ];
-
-        let messageIndex = 0;
-        const messageElement = document.getElementById('loadingMessage');
-
-        // Rotate messages
-        const messageInterval = setInterval(() => {
-            messageIndex = (messageIndex + 1) % messages.length;
-            messageElement.textContent = messages[messageIndex];
-        }, 2000);
-
-        // Hide skeleton after page loads (simulate loading)
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                clearInterval(messageInterval);
-                document.getElementById('skeletonLoader').classList.add('hidden');
-                
-                // Remove skeleton from DOM after animation
-                setTimeout(() => {
-                    document.getElementById('skeletonLoader').remove();
-                }, 500);
-            }, 1500); // Adjust this delay as needed
-        });
 
 // Console message for developers
 console.log('%c🎓 DUET Resource Hub', 'color: #00bcd4; font-size: 24px; font-weight: bold;');

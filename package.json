@@ -1,0 +1,23 @@
+{
+  "name": "resource-hub-(copy)",
+  "version": "1.0.0",
+  "description": "[![Netlify Status](https://img.shields.io/badge/netlify-deployed-success?style=flat-square)](https://25fcyber.netlify.app/) [![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red?style=flat-square)](https://25fcyber.netlify.app/) [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)",
+  "main": "OneSignalSDKWorker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muhammadrehan-dev/Resource-Hub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muhammadrehan-dev/Resource-Hub/issues"
+  },
+  "homepage": "https://github.com/muhammadrehan-dev/Resource-Hub#readme",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

@@ -26,29 +26,115 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Load news
-    loadNews();
+    // Load news from markdown files
+    loadNewsFromMarkdown();
 
     // Setup filter tabs
     setupFilterTabs();
 });
 
-// Load news from content folder
-async function loadNews() {
+// Parse markdown frontmatter
+function parseFrontmatter(markdown) {
+    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+    const match = markdown.match(frontmatterRegex);
+    
+    if (!match) {
+        return { frontmatter: {}, content: markdown };
+    }
+    
+    const frontmatterText = match[1];
+    const content = match[2].trim();
+    const frontmatter = {};
+    
+    // Parse YAML-like frontmatter
+    frontmatterText.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+            const key = line.substring(0, colonIndex).trim();
+            let value = line.substring(colonIndex + 1).trim();
+            
+            // Remove quotes if present
+            if ((value.startsWith('"') && value.endsWith('"')) || 
+                (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.slice(1, -1);
+            }
+            
+            // Convert boolean strings
+            if (value === 'true') value = true;
+            if (value === 'false') value = false;
+            
+            frontmatter[key] = value;
+        }
+    });
+    
+    return { frontmatter, content };
+}
+
+// Get list of markdown files from GitHub API
+async function getNewsMarkdownFiles() {
     try {
-        // Try to fetch the news index file or use GitHub API
-        // For now, we'll use a simple approach with fetch
-        const response = await fetch('../content/news/index.json');
+        const response = await fetch('https://api.github.com/repos/muhammadrehan-dev/Resource-Hub/contents/content/news');
         
         if (!response.ok) {
-            // If index doesn't exist, show empty state
-            allNews = [];
-            displayNews(allNews);
+            console.log('GitHub API failed, trying fallback...');
+            return [];
+        }
+        
+        const files = await response.json();
+        
+        // Filter only .md files (exclude index.html, .css, .js, etc.)
+        return files
+            .filter(file => file.name.endsWith('.md'))
+            .map(file => ({
+                name: file.name,
+                url: file.download_url,
+                path: file.path
+            }));
+    } catch (error) {
+        console.error('Error fetching news files from GitHub:', error);
+        return [];
+    }
+}
+
+// Load news from markdown files
+async function loadNewsFromMarkdown() {
+    const container = document.getElementById('newsContainer');
+    const emptyState = document.getElementById('emptyState');
+    
+    try {
+        // Get list of markdown files
+        const markdownFiles = await getNewsMarkdownFiles();
+        
+        if (markdownFiles.length === 0) {
+            container.innerHTML = '';
+            emptyState.style.display = 'block';
             return;
         }
-
-        const data = await response.json();
-        allNews = data.news || [];
+        
+        // Fetch and parse all markdown files
+        const newsPromises = markdownFiles.map(async (file) => {
+            try {
+                const response = await fetch(file.url);
+                const markdown = await response.text();
+                const { frontmatter, content } = parseFrontmatter(markdown);
+                
+                return {
+                    title: frontmatter.title || 'Untitled',
+                    date: frontmatter.date || new Date().toISOString(),
+                    category: frontmatter.category || 'General Update',
+                    body: content,
+                    featured: frontmatter.featured || false,
+                    sendNotification: frontmatter.sendNotification || false,
+                    isArchived: false // Will be set later
+                };
+            } catch (error) {
+                console.error(`Error loading ${file.name}:`, error);
+                return null;
+            }
+        });
+        
+        allNews = await Promise.all(newsPromises);
+        allNews = allNews.filter(item => item !== null);
         
         // Sort by date (newest first)
         allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -66,49 +152,9 @@ async function loadNews() {
         
     } catch (error) {
         console.error('Error loading news:', error);
-        
-        // Fallback: Try to load sample news
-        allNews = getSampleNews();
-        displayNews(allNews);
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
     }
-}
-
-// Sample news for testing
-function getSampleNews() {
-    return [
-        {
-            title: "Mid-Term Examination Schedule Released",
-            date: "2025-10-10T10:00:00",
-            category: "Exam",
-            body: "The mid-term examination schedule for Batch 25F has been released. Please check your respective subject pages for detailed timings.\n\n**Important Points:**\n- Exams start from October 20, 2025\n- Bring your student ID card\n- No electronic devices allowed\n- Report 15 minutes before exam time",
-            featured: true,
-            isArchived: false
-        },
-        {
-            title: "Programming Lab Session Rescheduled",
-            date: "2025-10-08T14:30:00",
-            category: "General Update",
-            body: "Due to faculty availability, the Programming lab session scheduled for October 12 has been moved to October 13 at the same time (2:00 PM).\n\nPlease make note of this change and attend accordingly.",
-            featured: false,
-            isArchived: false
-        },
-        {
-            title: "Urgent: Physics Assignment Deadline Extended",
-            date: "2025-10-05T09:00:00",
-            category: "Urgent",
-            body: "Good news! The Applied Physics Lab Report 1 deadline has been extended by 3 days. New deadline is October 23, 2025.\n\nMake sure to submit your reports on time.",
-            featured: false,
-            isArchived: false
-        },
-        {
-            title: "Welcome to Batch 25F Cybersecurity A2",
-            date: "2025-09-01T08:00:00",
-            category: "General Update",
-            body: "Welcome to the DUET Resource Hub! This platform will be your central place for all course materials, announcements, and deadlines.\n\nStay connected and check regularly for updates.",
-            featured: false,
-            isArchived: true
-        }
-    ];
 }
 
 // Display news cards
@@ -157,7 +203,7 @@ function createNewsCard(news, index) {
     card.setAttribute('data-aos', 'fade-up');
     card.setAttribute('data-aos-delay', (index * 100).toString());
     
-    const categoryClass = news.category.toLowerCase().replace(' ', '-');
+    const categoryClass = news.category.toLowerCase().replace(/\s+/g, '-');
     const formattedDate = formatDate(news.date);
     const content = marked.parse(news.body || '');
     

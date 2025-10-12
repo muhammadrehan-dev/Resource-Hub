@@ -1,1 +1,562 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Materials - DUET Resource Hub</title>
+    
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --primary-light: #b2ebf2;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --white: #ffffff;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 30px rgba(0, 188, 212, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 188, 212, 0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5f7 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-brand i {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            color: var(--primary-color);
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Subject Header */
+        .subject-header {
+            background: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+            border-radius: 20px;
+        }
+
+        .subject-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .subject-header h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .subject-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Search */
+        .search-section {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--primary-light);
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Folder Browser */
+        .folder-browser {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .folder-header {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: capitalize;
+        }
+
+        .folder-list {
+            padding: 0;
+        }
+
+        .folder-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--bg-light);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .folder-item:hover {
+            background: var(--bg-light);
+            padding-left: 30px;
+        }
+
+        .folder-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .file-icon.pdf { color: #e74c3c; }
+        .file-icon.ppt { color: #f39c12; }
+        .file-icon.code { color: #3498db; }
+        .file-icon.doc { color: #2980b9; }
+
+        .folder-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .file-info {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3);
+        }
+
+        .empty-folder {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .empty-folder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fee;
+            border: 2px solid #fcc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #c33;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .subject-header h1 {
+                font-size: 1.8rem;
+            }
+            .folder-item {
+                flex-wrap: wrap;
+            }
+            .download-btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                DUET Resource Hub
+            </a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../../news/">News</a></li>
+                <li><a href="../../deadlines/">Deadlines</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a href="../../index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading materials...</p>
+        </div>
+
+        <!-- Subject Header (Hidden initially) -->
+        <div id="subjectHeader" class="subject-header" style="display: none;">
+            <div class="subject-icon" id="subjectIcon">
+                <i class="fas fa-book"></i>
+            </div>
+            <h1 id="subjectTitle">Subject</h1>
+            <p id="subjectDesc">Course materials and resources</p>
+        </div>
+
+        <!-- Search (Hidden initially) -->
+        <div id="searchSection" class="search-section" style="display: none;">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search files...">
+            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div id="contentContainer"></div>
+    </div>
+
+    <script>
+        // Configuration for each subject
+        const subjectConfig = {
+            'applied-physics': {
+                name: 'Applied Physics',
+                icon: 'fa-atom',
+                color: '#e74c3c',
+                description: 'Lecture notes, lab manuals, and study materials'
+            },
+            'ict': {
+                name: 'ICT',
+                icon: 'fa-laptop-code',
+                color: '#3498db',
+                description: 'Computer fundamentals and digital resources'
+            },
+            'programming': {
+                name: 'Programming',
+                icon: 'fa-code',
+                color: '#2ecc71',
+                description: 'Code examples, projects, and tutorials'
+            },
+            'english': {
+                name: 'English',
+                icon: 'fa-book-open',
+                color: '#9b59b6',
+                description: 'Language resources and communication skills'
+            },
+            'calculus': {
+                name: 'Calculus',
+                icon: 'fa-square-root-alt',
+                color: '#f39c12',
+                description: 'Mathematical concepts and solved problems'
+            },
+            'islamiat': {
+                name: 'Islamiat',
+                icon: 'fa-mosque',
+                color: '#1abc9c',
+                description: 'Islamic studies course notes'
+            }
+        };
+
+        // GitHub configuration
+        const GITHUB_USER = 'muhammadrehan-dev';
+        const GITHUB_REPO = 'Resource-Hub';
+        const GITHUB_BRANCH = 'main';
+
+        // Standard subfolders to look for
+        const SUBFOLDERS = ['books', 'lectures', 'code', 'presentations'];
+
+        // Get current subject from URL
+        const currentPath = window.location.pathname;
+        const subjectSlug = currentPath.split('/').filter(p => p)[1]; // Gets 'applied-physics' from '/subjects/applied-physics/'
+        const config = subjectConfig[subjectSlug];
+
+        // File icon mapping
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const iconMap = {
+                'pdf': { icon: 'fa-file-pdf', class: 'pdf' },
+                'ppt': { icon: 'fa-file-powerpoint', class: 'ppt' },
+                'pptx': { icon: 'fa-file-powerpoint', class: 'ppt' },
+                'c': { icon: 'fa-file-code', class: 'code' },
+                'cpp': { icon: 'fa-file-code', class: 'code' },
+                'h': { icon: 'fa-file-code', class: 'code' },
+                'doc': { icon: 'fa-file-word', class: 'doc' },
+                'docx': { icon: 'fa-file-word', class: 'doc' },
+                'txt': { icon: 'fa-file-alt', class: 'doc' }
+            };
+            return iconMap[ext] || { icon: 'fa-file', class: 'doc' };
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (!bytes) return '';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // Initialize page
+        async function initializePage() {
+            if (!config) {
+                document.getElementById('loadingState').innerHTML = `
+                    <div class="error-message">
+                        <h2>Subject Not Found</h2>
+                        <p>The subject "${subjectSlug}" is not configured.</p>
+                        <a href="../../index.html" class="back-btn">Go Back Home</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Setup subject header
+            document.getElementById('subjectIcon').innerHTML = `<i class="fas ${config.icon}"></i>`;
+            document.getElementById('subjectIcon').style.color = config.color;
+            document.getElementById('subjectTitle').textContent = config.name;
+            document.getElementById('subjectDesc').textContent = config.description;
+
+            // Load files from GitHub
+            await loadSubjectFiles();
+        }
+
+        // Load files from GitHub API
+        async function loadSubjectFiles() {
+            const contentContainer = document.getElementById('contentContainer');
+            
+            try {
+                // Fetch files for each subfolder
+                for (const folder of SUBFOLDERS) {
+                    const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${subjectSlug}/${folder}?ref=${GITHUB_BRANCH}`;
+                    
+                    try {
+                        const response = await fetch(apiUrl);
+                        
+                        if (response.ok) {
+                            const files = await response.json();
+                            
+                            if (files.length > 0) {
+                                renderFolder(folder, files);
+                            }
+                        }
+                    } catch (error) {
+                        console.log(`Folder "${folder}" not found or empty`);
+                    }
+                }
+
+                // Show header and search
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('subjectHeader').style.display = 'block';
+                document.getElementById('searchSection').style.display = 'block';
+
+                // Setup search
+                setupSearch();
+
+            } catch (error) {
+                document.getElementById('loadingState').innerHTML = `
+                    <div class="error-message">
+                        <h2>Error Loading Files</h2>
+                        <p>${error.message}</p>
+                        <p>Make sure your GitHub repository is public and the path is correct.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render a folder with its files
+        function renderFolder(folderName, files) {
+            const contentContainer = document.getElementById('contentContainer');
+            
+            const folderDiv = document.createElement('div');
+            folderDiv.className = 'folder-browser';
+            folderDiv.innerHTML = `
+                <div class="folder-header">
+                    <i class="fas fa-folder"></i>
+                    ${folderName}
+                </div>
+                <div class="folder-list" id="folder-${folderName}"></div>
+            `;
+            
+            contentContainer.appendChild(folderDiv);
+            
+            const folderList = document.getElementById(`folder-${folderName}`);
+            
+            files.forEach(file => {
+                if (file.type === 'file') {
+                    const iconInfo = getFileIcon(file.name);
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'folder-item';
+                    fileItem.innerHTML = `
+                        <div class="file-icon ${iconInfo.class}">
+                            <i class="fas ${iconInfo.icon}"></i>
+                        </div>
+                        <span class="folder-name">${file.name}</span>
+                        <span class="file-info">${formatFileSize(file.size)}</span>
+                        <a href="${file.download_url}" class="download-btn" download>
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    `;
+                    folderList.appendChild(fileItem);
+                }
+            });
+        }
+
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const allFiles = document.querySelectorAll('.folder-item');
+                
+                allFiles.forEach(file => {
+                    const fileName = file.querySelector('.folder-name').textContent.toLowerCase();
+                    file.style.display = fileName.includes(searchTerm) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        // Start the page
+        initializePage();
+    </script>
+</body>
+</html>

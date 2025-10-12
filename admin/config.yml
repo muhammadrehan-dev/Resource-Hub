@@ -1,0 +1,53 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "content/uploads"
+public_folder: "/content/uploads"
+
+collections:
+  # News Collection
+  - name: "news"
+    label: "News & Announcements"
+    folder: "content/news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Category", name: "category", widget: "select", options: ["General Update", "Urgent", "Exam", "Assignment"], default: "General Update" }
+      - { label: "Content", name: "body", widget: "markdown" }
+      - { label: "Send Notification", name: "sendNotification", widget: "boolean", default: true, required: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false, required: false }
+
+  # Deadlines Collection
+  - name: "deadlines"
+    label: "Assignment Deadlines"
+    files:
+      - label: "Manage Deadlines"
+        name: "deadlines"
+        file: "content/deadlines/deadlines.json"
+        fields:
+          - label: "Deadlines"
+            name: "deadlines"
+            widget: "list"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Subject", name: "subject", widget: "select", options: ["Applied Physics", "ICT", "Programming", "English", "Calculus", "Islamiat"] }
+              - { label: "Assignment Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Due Date & Time", name: "dueDate", widget: "datetime" }
+              - { label: "Priority", name: "priority", widget: "select", options: ["high", "medium", "low"], default: "medium" }
+              - { label: "Submission Link", name: "submissionLink", widget: "string", required: false }
+
+  # Subject Materials (Optional - for organizing files)
+  - name: "subjects"
+    label: "Subject Materials"
+    folder: "subjects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Subject Name", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Materials", name: "body", widget: "markdown" }
+      - { label: "Google Drive Link", name: "driveLink", widget: "string", required: false }

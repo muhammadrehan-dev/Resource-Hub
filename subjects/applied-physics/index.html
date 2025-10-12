@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Applied Physics materials for Batch 25F Cybersecurity A2 at DUET - Lecture notes, assignments, and study resources">
+    
+    <title>Applied Physics - DUET Resource Hub</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../../logo.png">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --primary-light: #b2ebf2;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --white: #ffffff;
+            --bg-light: #f8f9fa;
+            --shadow: 0 10px 30px rgba(0, 188, 212, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 188, 212, 0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5f7 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-brand i {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .subject-header {
+            background: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+            border-radius: 20px;
+        }
+
+        .subject-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .subject-header h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .subject-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Search Bar */
+        .search-section {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--primary-light);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-box button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Folder Structure */
+        .folder-browser {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .folder-header {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .folder-list {
+            padding: 0;
+        }
+
+        .folder-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--bg-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .folder-item:hover {
+            background: var(--bg-light);
+            padding-left: 30px;
+        }
+
+        .folder-item i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .folder-item.file-item i {
+            color: var(--text-light);
+        }
+
+        .folder-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .file-info {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3);
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            color: var(--primary-color);
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .subject-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="../../index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                DUET Resource Hub
+            </a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../../news/">News</a></li>
+                <li><a href="../../deadlines/">Deadlines</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Back Button -->
+        <a href="../../index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <!-- Subject Header -->
+        <div class="subject-header">
+            <div class="subject-icon">
+                <i class="fas fa-atom"></i>
+            </div>
+            <h1>Applied Physics</h1>
+            <p>Lecture notes, lab manuals, assignments, and study materials</p>
+        </div>
+
+        <!-- Search -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search files and folders...">
+                <button onclick="searchFiles()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Lectures Folder -->
+        <div class="folder-browser">
+            <div class="folder-header">
+                <i class="fas fa-folder"></i>
+                Lectures
+            </div>
+            <div class="folder-list" id="lectures">
+                <!-- Example files - Replace with your actual files -->
+                <div class="folder-item file-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="folder-name">Week 1 - Introduction to Physics</span>
+                    <span class="file-info">PDF • 2.5 MB</span>
+                    <a href="lectures/week-1-introduction.pdf" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                <div class="folder-item file-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="folder-name">Week 2 - Mechanics</span>
+                    <span class="file-info">PDF • 3.1 MB</span>
+                    <a href="lectures/week-2-mechanics.pdf" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                <!-- Add more lecture files here -->
+            </div>
+        </div>
+
+        <!-- Assignments Folder -->
+        <div class="folder-browser">
+            <div class="folder-header">
+                <i class="fas fa-folder"></i>
+                Assignments
+            </div>
+            <div class="folder-list" id="assignments">
+                <div class="folder-item file-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="folder-name">Assignment 1 - Kinematics</span>
+                    <span class="file-info">PDF • 1.2 MB</span>
+                    <a href="assignments/assignment-1.pdf" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                <!-- Add more assignment files here -->
+            </div>
+        </div>
+
+        <!-- Lab Manuals Folder -->
+        <div class="folder-browser">
+            <div class="folder-header">
+                <i class="fas fa-folder"></i>
+                Lab Manuals
+            </div>
+            <div class="folder-list" id="lab-manuals">
+                <div class="folder-item file-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="folder-name">Lab Manual - Complete Guide</span>
+                    <span class="file-info">PDF • 5.8 MB</span>
+                    <a href="lab-manuals/complete-manual.pdf" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                <!-- Add more lab manual files here -->
+            </div>
+        </div>
+
+        <!-- Notes Folder -->
+        <div class="folder-browser">
+            <div class="folder-header">
+                <i class="fas fa-folder"></i>
+                Notes & Resources
+            </div>
+            <div class="folder-list" id="notes">
+                <div class="folder-item file-item">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="folder-name">Important Formulas</span>
+                    <span class="file-info">PDF • 800 KB</span>
+                    <a href="notes/formulas.pdf" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                <!-- Add more notes here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple search functionality
+        function searchFiles() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const allFiles = document.querySelectorAll('.file-item');
+            
+            allFiles.forEach(file => {
+                const fileName = file.querySelector('.folder-name').textContent.toLowerCase();
+                if (fileName.includes(searchTerm)) {
+                    file.style.display = 'flex';
+                } else {
+                    file.style.display = 'none';
+                }
+            });
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchFiles();
+            }
+        });
+
+        // Clear search when input is empty
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            if (e.target.value === '') {
+                const allFiles = document.querySelectorAll('.file-item');
+                allFiles.forEach(file => {
+                    file.style.display = 'flex';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

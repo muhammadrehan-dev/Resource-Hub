@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Load deadlines
-    loadDeadlines();
+    // Load deadlines from markdown files
+    loadDeadlinesFromMarkdown();
 
     // Setup filter tabs
     setupFilterTabs();
@@ -37,17 +37,109 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(checkDeadlineReminders, 3600000);
 });
 
-// Load deadlines
-async function loadDeadlines() {
+// Parse markdown frontmatter
+function parseFrontmatter(markdown) {
+    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+    const match = markdown.match(frontmatterRegex);
+    
+    if (!match) {
+        return { frontmatter: {}, content: markdown };
+    }
+    
+    const frontmatterText = match[1];
+    const content = match[2].trim();
+    const frontmatter = {};
+    
+    // Parse YAML-like frontmatter
+    frontmatterText.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+            const key = line.substring(0, colonIndex).trim();
+            let value = line.substring(colonIndex + 1).trim();
+            
+            // Remove quotes if present
+            if ((value.startsWith('"') && value.endsWith('"')) || 
+                (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.slice(1, -1);
+            }
+            
+            // Convert boolean strings
+            if (value === 'true') value = true;
+            if (value === 'false') value = false;
+            
+            frontmatter[key] = value;
+        }
+    });
+    
+    return { frontmatter, content };
+}
+
+// Get list of markdown files from GitHub API
+async function getDeadlineMarkdownFiles() {
     try {
-        const response = await fetch('../deadlines.json');
+        const response = await fetch('https://api.github.com/repos/muhammadrehan-dev/Resource-Hub/contents/content/deadlines');
         
         if (!response.ok) {
-            throw new Error('Failed to load deadlines');
+            console.log('GitHub API failed for deadlines');
+            return [];
         }
+        
+        const files = await response.json();
+        
+        // Filter only .md files (exclude index.html, .css, .js, .json)
+        return files
+            .filter(file => file.name.endsWith('.md'))
+            .map(file => ({
+                name: file.name,
+                url: file.download_url,
+                path: file.path
+            }));
+    } catch (error) {
+        console.error('Error fetching deadline files:', error);
+        return [];
+    }
+}
 
-        const data = await response.json();
-        allDeadlines = data.deadlines || [];
+// Load deadlines from markdown files
+async function loadDeadlinesFromMarkdown() {
+    const container = document.getElementById('deadlinesContainer');
+    const emptyState = document.getElementById('emptyState');
+    
+    try {
+        // Get list of markdown files
+        const markdownFiles = await getDeadlineMarkdownFiles();
+        
+        if (markdownFiles.length === 0) {
+            container.innerHTML = '';
+            emptyState.style.display = 'block';
+            return;
+        }
+        
+        // Fetch and parse all markdown files
+        const deadlinePromises = markdownFiles.map(async (file) => {
+            try {
+                const response = await fetch(file.url);
+                const markdown = await response.text();
+                const { frontmatter, content } = parseFrontmatter(markdown);
+                
+                return {
+                    id: file.name.replace('.md', ''),
+                    title: frontmatter.title || 'Untitled',
+                    subject: frontmatter.subject || 'General',
+                    dueDate: frontmatter.dueDate || frontmatter.date,
+                    description: content || frontmatter.description || '',
+                    priority: (frontmatter.priority || 'medium').toLowerCase(),
+                    submissionLink: frontmatter.submissionLink || '',
+                    isExpired: false // Will be set later
+                };
+            } catch (error) {
+                console.error(`Error loading ${file.name}:`, error);
+                return null;
+            }
+        });
+        
+        allDeadlines = await Promise.all(deadlinePromises);
+        allDeadlines = allDeadlines.filter(item => item !== null);
         
         // Sort by due date (earliest first)
         allDeadlines.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
@@ -65,7 +157,8 @@ async function loadDeadlines() {
         
     } catch (error) {
         console.error('Error loading deadlines:', error);
-        showEmptyState();
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
     }
 }
 
@@ -75,9 +168,13 @@ function updateStats() {
     const activeDeadlines = allDeadlines.filter(d => !d.isExpired);
     const highPriority = activeDeadlines.filter(d => d.priority === 'high').length;
     
-    document.getElementById('highPriorityCount').textContent = highPriority;
-    document.getElementById('upcomingCount').textContent = activeDeadlines.length;
-    document.getElementById('totalCount').textContent = allDeadlines.length;
+    const highPriorityElement = document.getElementById('highPriorityCount');
+    const upcomingElement = document.getElementById('upcomingCount');
+    const totalElement = document.getElementById('totalCount');
+    
+    if (highPriorityElement) highPriorityElement.textContent = highPriority;
+    if (upcomingElement) upcomingElement.textContent = activeDeadlines.length;
+    if (totalElement) totalElement.textContent = allDeadlines.length;
 }
 
 // Display deadlines
@@ -311,7 +408,7 @@ function sendDeadlineReminder(deadline) {
         body: JSON.stringify({
             title: `⏰ Deadline Reminder: ${deadline.subject}`,
             message: `${deadline.title} is due in ${hoursLeft} hours! Don't forget to submit.`,
-            url: 'https://25fcyber.netlify.app/deadlines/'
+            url: 'https://25fcyber.netlify.app/content/deadlines/'
         })
     })
     .then(response => response.json())
@@ -323,14 +420,6 @@ function sendDeadlineReminder(deadline) {
     .catch(error => {
         console.error('Error sending reminder:', error);
     });
-}
-
-// Show empty state
-function showEmptyState() {
-    const container = document.getElementById('deadlinesContainer');
-    const emptyState = document.getElementById('emptyState');
-    container.innerHTML = '';
-    emptyState.style.display = 'block';
 }
 
 // Console message

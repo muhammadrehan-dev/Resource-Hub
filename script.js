@@ -80,45 +80,131 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load latest news and deadlines on homepage
     if (document.getElementById('newsGrid')) {
-        loadLatestNews();
+        loadLatestNewsFromMarkdown();
     }
     
     if (document.getElementById('deadlinesGrid')) {
-        loadUpcomingDeadlines();
+        loadUpcomingDeadlinesFromMarkdown();
     }
 });
 
-// Load latest 3 news items for homepage
-async function loadLatestNews() {
+// Parse markdown frontmatter
+function parseFrontmatter(markdown) {
+    const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+    const match = markdown.match(frontmatterRegex);
+    
+    if (!match) {
+        return { frontmatter: {}, content: markdown };
+    }
+    
+    const frontmatterText = match[1];
+    const content = match[2].trim();
+    const frontmatter = {};
+    
+    // Parse YAML-like frontmatter
+    frontmatterText.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+            const key = line.substring(0, colonIndex).trim();
+            let value = line.substring(colonIndex + 1).trim();
+            
+            // Remove quotes if present
+            if ((value.startsWith('"') && value.endsWith('"')) || 
+                (value.startsWith("'") && value.endsWith("'"))) {
+                value = value.slice(1, -1);
+            }
+            
+            // Convert boolean strings
+            if (value === 'true') value = true;
+            if (value === 'false') value = false;
+            
+            frontmatter[key] = value;
+        }
+    });
+    
+    return { frontmatter, content };
+}
+
+// Get list of markdown files from the news directory
+async function getNewsMarkdownFiles() {
+    try {
+        // Fetch the news directory listing from GitHub API
+        const response = await fetch('https://api.github.com/repos/muhammadrehan-dev/Resource-Hub/contents/content/news');
+        
+        if (!response.ok) {
+            console.log('GitHub API failed, using fallback method');
+            return [];
+        }
+        
+        const files = await response.json();
+        
+        // Filter only .md files (exclude index.html, .css, .js)
+        return files
+            .filter(file => file.name.endsWith('.md'))
+            .map(file => ({
+                name: file.name,
+                url: file.download_url
+            }));
+    } catch (error) {
+        console.error('Error fetching news files:', error);
+        return [];
+    }
+}
+
+// Load latest news from markdown files
+async function loadLatestNewsFromMarkdown() {
     const newsGrid = document.getElementById('newsGrid');
     
     try {
-        const response = await fetch('content/news/index.json');
+        // Get list of markdown files
+        const markdownFiles = await getNewsMarkdownFiles();
         
-        if (!response.ok) {
-            throw new Error('Failed to load news');
+        if (markdownFiles.length === 0) {
+            newsGrid.innerHTML = '<div class="news-placeholder"><p>No recent news available</p></div>';
+            return;
         }
-
-        const data = await response.json();
-        let news = data.news || [];
+        
+        // Fetch and parse all markdown files
+        const newsPromises = markdownFiles.map(async (file) => {
+            try {
+                const response = await fetch(file.url);
+                const markdown = await response.text();
+                const { frontmatter, content } = parseFrontmatter(markdown);
+                
+                return {
+                    title: frontmatter.title || 'Untitled',
+                    date: frontmatter.date || new Date().toISOString(),
+                    category: frontmatter.category || 'General Update',
+                    body: content,
+                    featured: frontmatter.featured || false,
+                    sendNotification: frontmatter.sendNotification || false
+                };
+            } catch (error) {
+                console.error(`Error loading ${file.name}:`, error);
+                return null;
+            }
+        });
+        
+        let newsItems = await Promise.all(newsPromises);
+        newsItems = newsItems.filter(item => item !== null);
         
         // Filter out archived news (older than 30 days)
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        news = news.filter(item => new Date(item.date) >= thirtyDaysAgo);
+        newsItems = newsItems.filter(item => new Date(item.date) >= thirtyDaysAgo);
         
         // Sort by date (newest first) and take top 3
-        news.sort((a, b) => new Date(b.date) - new Date(a.date));
-        news = news.slice(0, 3);
+        newsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+        newsItems = newsItems.slice(0, 3);
         
-        if (news.length === 0) {
+        if (newsItems.length === 0) {
             newsGrid.innerHTML = '<div class="news-placeholder"><p>No recent news available</p></div>';
             return;
         }
         
         newsGrid.innerHTML = '';
         
-        news.forEach((item, index) => {
+        newsItems.forEach((item, index) => {
             const card = createNewsCardPreview(item, index);
             newsGrid.appendChild(card);
         });
@@ -143,7 +229,7 @@ function createNewsCardPreview(news, index) {
         year: 'numeric'
     });
     
-    const categoryClass = news.category.toLowerCase().replace(' ', '-');
+    const categoryClass = news.category.toLowerCase().replace(/\s+/g, '-');
     const excerpt = news.body ? news.body.substring(0, 120) + '...' : 'No description';
     
     card.innerHTML = `
@@ -157,18 +243,106 @@ function createNewsCardPreview(news, index) {
     
     card.style.cursor = 'pointer';
     card.addEventListener('click', () => {
-        window.location.href = 'news/';
+        window.location.href = 'content/news/';
     });
     
     return card;
 }
 
-// Load upcoming 3 deadlines for homepage
-async function loadUpcomingDeadlines() {
+// Get list of deadline markdown files
+async function getDeadlineMarkdownFiles() {
+    try {
+        const response = await fetch('https://api.github.com/repos/muhammadrehan-dev/Resource-Hub/contents/content/deadlines');
+        
+        if (!response.ok) {
+            console.log('GitHub API failed for deadlines');
+            return [];
+        }
+        
+        const files = await response.json();
+        
+        return files
+            .filter(file => file.name.endsWith('.md'))
+            .map(file => ({
+                name: file.name,
+                url: file.download_url
+            }));
+    } catch (error) {
+        console.error('Error fetching deadline files:', error);
+        return [];
+    }
+}
+
+// Load upcoming deadlines from markdown files
+async function loadUpcomingDeadlinesFromMarkdown() {
     const deadlinesGrid = document.getElementById('deadlinesGrid');
     
     try {
-        const response = await fetch('deadlines.json');
+        const markdownFiles = await getDeadlineMarkdownFiles();
+        
+        if (markdownFiles.length === 0) {
+            // Fallback to JSON if no markdown files
+            loadUpcomingDeadlinesFromJSON();
+            return;
+        }
+        
+        // Fetch and parse all markdown files
+        const deadlinePromises = markdownFiles.map(async (file) => {
+            try {
+                const response = await fetch(file.url);
+                const markdown = await response.text();
+                const { frontmatter, content } = parseFrontmatter(markdown);
+                
+                return {
+                    title: frontmatter.title || 'Untitled',
+                    subject: frontmatter.subject || 'General',
+                    dueDate: new Date(frontmatter.dueDate || frontmatter.date),
+                    description: content || frontmatter.description || '',
+                    priority: frontmatter.priority || 'medium',
+                    submissionLink: frontmatter.submissionLink || ''
+                };
+            } catch (error) {
+                console.error(`Error loading ${file.name}:`, error);
+                return null;
+            }
+        });
+        
+        let deadlines = await Promise.all(deadlinePromises);
+        deadlines = deadlines.filter(item => item !== null);
+        
+        // Filter only upcoming (not expired)
+        const now = new Date();
+        deadlines = deadlines.filter(d => d.dueDate > now);
+        
+        // Sort by due date and take top 3
+        deadlines.sort((a, b) => a.dueDate - b.dueDate);
+        deadlines = deadlines.slice(0, 3);
+        
+        if (deadlines.length === 0) {
+            deadlinesGrid.innerHTML = '<div class="deadline-placeholder"><p>No upcoming deadlines</p></div>';
+            return;
+        }
+        
+        deadlinesGrid.innerHTML = '';
+        
+        deadlines.forEach((deadline, index) => {
+            const card = createDeadlineCardPreview(deadline, index);
+            deadlinesGrid.appendChild(card);
+        });
+        
+    } catch (error) {
+        console.error('Error loading deadlines:', error);
+        // Fallback to JSON
+        loadUpcomingDeadlinesFromJSON();
+    }
+}
+
+// Fallback: Load deadlines from JSON (existing functionality)
+async function loadUpcomingDeadlinesFromJSON() {
+    const deadlinesGrid = document.getElementById('deadlinesGrid');
+    
+    try {
+        const response = await fetch('content/deadlines/deadlines.json');
         
         if (!response.ok) {
             throw new Error('Failed to load deadlines');
@@ -193,12 +367,13 @@ async function loadUpcomingDeadlines() {
         deadlinesGrid.innerHTML = '';
         
         deadlines.forEach((deadline, index) => {
+            deadline.dueDate = new Date(deadline.dueDate);
             const card = createDeadlineCardPreview(deadline, index);
             deadlinesGrid.appendChild(card);
         });
         
     } catch (error) {
-        console.error('Error loading deadlines:', error);
+        console.error('Error loading deadlines from JSON:', error);
         deadlinesGrid.innerHTML = '<div class="deadline-placeholder"><p>Unable to load deadlines. Please check back later.</p></div>';
     }
 }
@@ -210,7 +385,7 @@ function createDeadlineCardPreview(deadline, index) {
     card.setAttribute('data-aos', 'fade-up');
     card.setAttribute('data-aos-delay', (index * 100).toString());
     
-    const dueDate = new Date(deadline.dueDate);
+    const dueDate = deadline.dueDate;
     const now = new Date();
     const timeLeft = dueDate - now;
     const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
@@ -256,7 +431,7 @@ function createDeadlineCardPreview(deadline, index) {
     
     card.style.cursor = 'pointer';
     card.addEventListener('click', () => {
-        window.location.href = 'deadlines/';
+        window.location.href = 'content/deadlines/';
     });
     
     return card;

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <title>Latest News - DUET Resource Hub</title>
+    <meta name="description" content="Stay updated with the latest news and announcements for Batch 25F Cybersecurity A2 at DUET.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../logo.png">
+    <meta name="theme-color" content="#00bcd4">
+    
+    <!-- AOS Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="news.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="../index.html" class="nav-brand">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>DUET Resource Hub</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="../news/" class="active"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="../deadlines/"><i class="fas fa-calendar-alt"></i> Deadlines</a></li>
+                    <li><a href="../admin/" class="admin-link"><i class="fas fa-user-shield"></i> Admin</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="../index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="../news/"><i class="fas fa-newspaper"></i> News</a>
+        <a href="../deadlines/"><i class="fas fa-calendar-alt"></i> Deadlines</a>
+        <a href="../admin/"><i class="fas fa-user-shield"></i> Admin</a>
+    </div>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <h1><i class="fas fa-newspaper"></i> Latest News & Announcements</h1>
+                <p>Stay updated with the latest information for Batch 25F Cybersecurity A2</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs" data-aos="fade-up">
+                <button class="filter-tab active" data-filter="all">
+                    <i class="fas fa-list"></i> All News
+                </button>
+                <button class="filter-tab" data-filter="General Update">
+                    <i class="fas fa-info-circle"></i> General
+                </button>
+                <button class="filter-tab" data-filter="Urgent">
+                    <i class="fas fa-exclamation-triangle"></i> Urgent
+                </button>
+                <button class="filter-tab" data-filter="Exam">
+                    <i class="fas fa-clipboard-list"></i> Exams
+                </button>
+                <button class="filter-tab" data-filter="Assignment">
+                    <i class="fas fa-tasks"></i> Assignments
+                </button>
+                <button class="filter-tab" data-filter="archived">
+                    <i class="fas fa-archive"></i> Archived
+                </button>
+            </div>
+
+            <!-- News Grid -->
+            <div class="news-container" id="newsContainer">
+                <!-- Loading State -->
+                <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading news...</p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <h3>No News Found</h3>
+                <p>There are no news articles in this category yet.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 TH3 CUT3 V1RU5 - DUET Resource Hub</p>
+            <p class="footer-note">Made with <i class="fas fa-heart"></i> for students of A2 Cybersecurity Batch 25F</p>
+        </div>
+    </footer>
+
+    <!-- AOS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- Marked.js for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="news.js"></script>
+</body>
+</html>

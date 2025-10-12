@@ -1,0 +1,31 @@
+{
+  "news": [
+    {
+      "id": "1",
+      "title": "Mid-Term Examination Schedule Released",
+      "date": "2025-10-10T10:00:00Z",
+      "category": "Exam",
+      "body": "The mid-term examination schedule for Batch 25F has been released. Please check your respective subject pages for detailed timings.\n\n**Important Points:**\n- Exams start from October 20, 2025\n- Bring your student ID card\n- No electronic devices allowed\n- Report 15 minutes before exam time\n\nGood luck with your preparations!",
+      "featured": true,
+      "sendNotification": true
+    },
+    {
+      "id": "2",
+      "title": "Programming Lab Session Rescheduled",
+      "date": "2025-10-08T14:30:00Z",
+      "category": "General Update",
+      "body": "Due to faculty availability, the Programming lab session scheduled for October 12 has been moved to October 13 at the same time (2:00 PM).\n\nPlease make note of this change and attend accordingly. All lab materials will be available on the resource hub.",
+      "featured": false,
+      "sendNotification": true
+    },
+    {
+      "id": "3",
+      "title": "Urgent: Physics Assignment Deadline Extended",
+      "date": "2025-10-05T09:00:00Z",
+      "category": "Urgent",
+      "body": "Good news! The Applied Physics Lab Report 1 deadline has been extended by 3 days. New deadline is October 23, 2025 at 11:59 PM.\n\nMake sure to submit your reports on time through the submission portal.",
+      "featured": false,
+      "sendNotification": true
+    }
+  ]
+}

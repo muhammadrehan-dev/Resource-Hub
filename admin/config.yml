@@ -1,7 +1,7 @@
 backend:
-  name: github
-  repo: muhammadrehan-dev/Resource-Hub
+  name: git-gateway
   branch: main
+
 
 
 

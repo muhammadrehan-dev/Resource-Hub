@@ -6,16 +6,6 @@ AOS.init({
     offset: 100
 });
 
-// Google Drive folder links
-const googleDriveLinks = {
-    'Applied Physics': 'https://drive.google.com/drive/folders/13ke3PZAf5H21Z3HIf4FQvB8bMcVZBs93?usp=drive_link',
-    'ICT': 'https://drive.google.com/drive/folders/1x8lD7BH50vg2rp4a3HP1FhkDi13jGP6v?usp=drive_link',
-    'Programming': 'https://drive.google.com/drive/folders/1DoPFcos3djeXszOefTcC4G7plo4uHtr5?usp=drive_link',
-    'English': 'https://drive.google.com/drive/folders/1IE_KnH00f7GlonHLqB95XnIqoNkCK55D?usp=sharing',
-    'Calculus': 'https://drive.google.com/drive/folders/1mDXAb3eBUAU3ArwzZizLijP_WzK5xP9s?usp=drive_link',
-    'Islamiat': 'https://drive.google.com/drive/folders/105zMzsX1MnyAT9P6NMxMMiaxymNdiblC?usp=sharing'
-};
-
 // Skeleton Loader Logic
 document.addEventListener('DOMContentLoaded', function() {
     // Fun loading messages
@@ -56,31 +46,221 @@ document.addEventListener('DOMContentLoaded', function() {
                     skeletonLoader.remove();
                 }, 500);
             }
-        }, 1500); // Shows skeleton for 1.5 seconds after page load
+        }, 1500);
     });
 
-    // Handle card link clicks
-    const cardLinks = document.querySelectorAll('.card-link');
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
     
-    cardLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const subject = this.getAttribute('data-subject');
-            const driveLink = googleDriveLinks[subject];
-            
-            if (driveLink) {
-                // Add a smooth transition effect
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    window.open(driveLink, '_blank');
-                    this.style.transform = '';
-                }, 150);
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            if (mobileMenu.style.display === 'block') {
+                mobileMenu.style.display = 'none';
             } else {
-                alert(`Google Drive link for ${subject} is not set yet. Please add it in script.js`);
+                mobileMenu.style.display = 'block';
             }
         });
-    });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.style.display = 'none';
+            }
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.style.display = 'none';
+            });
+        });
+    }
+
+    // Load latest news and deadlines on homepage
+    if (document.getElementById('newsGrid')) {
+        loadLatestNews();
+    }
+    
+    if (document.getElementById('deadlinesGrid')) {
+        loadUpcomingDeadlines();
+    }
 });
+
+// Load latest 3 news items for homepage
+async function loadLatestNews() {
+    const newsGrid = document.getElementById('newsGrid');
+    
+    try {
+        const response = await fetch('content/news/index.json');
+        
+        if (!response.ok) {
+            throw new Error('Failed to load news');
+        }
+
+        const data = await response.json();
+        let news = data.news || [];
+        
+        // Filter out archived news (older than 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        news = news.filter(item => new Date(item.date) >= thirtyDaysAgo);
+        
+        // Sort by date (newest first) and take top 3
+        news.sort((a, b) => new Date(b.date) - new Date(a.date));
+        news = news.slice(0, 3);
+        
+        if (news.length === 0) {
+            newsGrid.innerHTML = '<div class="news-placeholder"><p>No recent news available</p></div>';
+            return;
+        }
+        
+        newsGrid.innerHTML = '';
+        
+        news.forEach((item, index) => {
+            const card = createNewsCardPreview(item, index);
+            newsGrid.appendChild(card);
+        });
+        
+    } catch (error) {
+        console.error('Error loading news:', error);
+        newsGrid.innerHTML = '<div class="news-placeholder"><p>Unable to load news. Please check back later.</p></div>';
+    }
+}
+
+// Create news card preview for homepage
+function createNewsCardPreview(news, index) {
+    const card = document.createElement('div');
+    card.className = 'news-card';
+    card.setAttribute('data-aos', 'fade-up');
+    card.setAttribute('data-aos-delay', (index * 100).toString());
+    
+    const date = new Date(news.date);
+    const formattedDate = date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+    });
+    
+    const categoryClass = news.category.toLowerCase().replace(' ', '-');
+    const excerpt = news.body ? news.body.substring(0, 120) + '...' : 'No description';
+    
+    card.innerHTML = `
+        <div class="news-category ${categoryClass}">${news.category}</div>
+        <h3 class="news-title">${news.title}</h3>
+        <p class="news-excerpt">${excerpt}</p>
+        <div class="news-footer">
+            <span class="news-date"><i class="fas fa-calendar"></i> ${formattedDate}</span>
+        </div>
+    `;
+    
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+        window.location.href = 'news/';
+    });
+    
+    return card;
+}
+
+// Load upcoming 3 deadlines for homepage
+async function loadUpcomingDeadlines() {
+    const deadlinesGrid = document.getElementById('deadlinesGrid');
+    
+    try {
+        const response = await fetch('deadlines.json');
+        
+        if (!response.ok) {
+            throw new Error('Failed to load deadlines');
+        }
+
+        const data = await response.json();
+        let deadlines = data.deadlines || [];
+        
+        // Filter only upcoming (not expired)
+        const now = new Date();
+        deadlines = deadlines.filter(d => new Date(d.dueDate) > now);
+        
+        // Sort by due date and take top 3
+        deadlines.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        deadlines = deadlines.slice(0, 3);
+        
+        if (deadlines.length === 0) {
+            deadlinesGrid.innerHTML = '<div class="deadline-placeholder"><p>No upcoming deadlines</p></div>';
+            return;
+        }
+        
+        deadlinesGrid.innerHTML = '';
+        
+        deadlines.forEach((deadline, index) => {
+            const card = createDeadlineCardPreview(deadline, index);
+            deadlinesGrid.appendChild(card);
+        });
+        
+    } catch (error) {
+        console.error('Error loading deadlines:', error);
+        deadlinesGrid.innerHTML = '<div class="deadline-placeholder"><p>Unable to load deadlines. Please check back later.</p></div>';
+    }
+}
+
+// Create deadline card preview for homepage
+function createDeadlineCardPreview(deadline, index) {
+    const card = document.createElement('div');
+    card.className = 'deadline-card';
+    card.setAttribute('data-aos', 'fade-up');
+    card.setAttribute('data-aos-delay', (index * 100).toString());
+    
+    const dueDate = new Date(deadline.dueDate);
+    const now = new Date();
+    const timeLeft = dueDate - now;
+    const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+    
+    const formattedDate = dueDate.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const priorityClass = deadline.priority || 'medium';
+    let timeLeftText = '';
+    let urgencyClass = '';
+    
+    if (daysLeft === 0) {
+        timeLeftText = 'Due Today!';
+        urgencyClass = 'urgent';
+    } else if (daysLeft === 1) {
+        timeLeftText = 'Due Tomorrow';
+        urgencyClass = 'urgent';
+    } else if (daysLeft <= 3) {
+        timeLeftText = `${daysLeft} days left`;
+        urgencyClass = 'urgent';
+    } else {
+        timeLeftText = `${daysLeft} days left`;
+    }
+    
+    card.innerHTML = `
+        <div class="deadline-priority priority-${priorityClass}">
+            <i class="fas fa-flag"></i> ${priorityClass.toUpperCase()}
+        </div>
+        <div class="deadline-subject-badge">${deadline.subject}</div>
+        <h3 class="deadline-title">${deadline.title}</h3>
+        <p class="deadline-desc">${deadline.description}</p>
+        <div class="deadline-footer">
+            <span class="deadline-date"><i class="fas fa-clock"></i> ${formattedDate}</span>
+            <span class="deadline-countdown ${urgencyClass}">
+                <i class="fas fa-hourglass-half"></i> ${timeLeftText}
+            </span>
+        </div>
+    `;
+    
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+        window.location.href = 'deadlines/';
+    });
+    
+    return card;
+}
 
 // Add loading animation to cards
 const subjectCards = document.querySelectorAll('.subject-card');
@@ -109,8 +289,32 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Add hover effect to card links
+const cardLinks = document.querySelectorAll('.card-link');
+cardLinks.forEach(link => {
+    link.addEventListener('mouseenter', function() {
+        const card = this.closest('.subject-card');
+        if (card) {
+            card.style.transform = 'translateY(-12px) scale(1.02)';
+        }
+    });
+    
+    link.addEventListener('mouseleave', function() {
+        const card = this.closest('.subject-card');
+        if (card) {
+            card.style.transform = '';
+        }
+    });
+});
+
 // Console message for developers
 console.log('%c🎓 DUET Resource Hub', 'color: #00bcd4; font-size: 24px; font-weight: bold;');
 console.log('%cBatch 25F | Cybersecurity A2', 'color: #0097a7; font-size: 16px; font-weight: bold;');
 console.log('%cMade with ❤️ by TH3 CUT3 V1RU5', 'color: #7f8c8d; font-size: 14px;');
-console.log('%cDon\'t forget to update Google Drive links in script.js!', 'color: #ff6b6b; font-size: 12px; font-weight: bold;');
+console.log('%cNavigating to subject pages... 🚀', 'color: #27ae60; font-size: 12px; font-weight: bold;');
+
+// Add page transition effect
+window.addEventListener('beforeunload', () => {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.3s ease';
+});

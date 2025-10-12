@@ -1,9 +1,8 @@
 backend:
-  name: auth0
+  name: github
+  repo: muhammadrehan-dev/Resource-Hub
   branch: main
-  auth0_domain: "{{ env.AUTH0_DOMAIN }}"
-  auth0_client_id: "{{ env.AUTH0_CLIENT_ID }}"
-  auth0_audience: "{{ env.AUTH0_AUDIENCE }}"
+
 
 
 media_folder: "content/uploads"

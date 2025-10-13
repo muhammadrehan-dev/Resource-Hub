@@ -1,12 +1,21 @@
 {
   "deadlines": [
     {
-      "title": "Assignment ",
+      "title": "Word Assignment ",
       "subject": "ICT",
       "dueDate": "2025-10-15T12:59:00",
       "description": "Submit Your ICT assignments",
       "priority": "high",
       "submissionLink": ""
     }
+{
+      "title": "Hand Written Assignment ",
+      "subject": "ICT",
+      "dueDate": "2025-10-22T12:59:00",
+      "description": "Submit Your ICT assignments",
+      "priority": "high",
+      "submissionLink": ""
+    }
+
   ]
 }

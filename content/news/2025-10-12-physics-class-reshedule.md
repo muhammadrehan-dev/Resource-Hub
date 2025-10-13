@@ -5,4 +5,4 @@ category: General Update
 sendNotification: true
 featured: false
 ---
-Physics Class is shifted from friday to tuesday 10am to 11am
+Physics Class is shifted from friday to tuesday 9am to 10am

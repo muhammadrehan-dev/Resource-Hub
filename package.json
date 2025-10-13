@@ -1,23 +1,39 @@
 {
-  "name": "resource-hub-(copy)",
-  "version": "1.0.0",
-  "description": "[![Netlify Status](https://img.shields.io/badge/netlify-deployed-success?style=flat-square)](https://25fcyber.netlify.app/) [![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red?style=flat-square)](https://25fcyber.netlify.app/) [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)",
-  "main": "OneSignalSDKWorker.js",
+  "name": "resource-hub",
+  "version": "2.0.0",
+  "description": "DUET Resource Hub - Batch 25F Cybersecurity A2 with Tina CMS",
+  "main": "index.html",
   "scripts": {
+    "dev": "tinacms dev -c \"npx http-server . -p 3000\"",
+    "serve": "npx http-server . -p 3000",
+    "build": "tinacms build",
+    "deploy": "npm run build && vercel --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/muhammadrehan-dev/Resource-Hub.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "duet",
+    "resource-hub",
+    "cybersecurity",
+    "education",
+    "cms"
+  ],
+  "author": "TH3 CUT3 V1RU5",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/muhammadrehan-dev/Resource-Hub/issues"
   },
-  "homepage": "https://github.com/muhammadrehan-dev/Resource-Hub#readme",
+  "homepage": "https://25fcyber.vercel.app",
   "dependencies": {
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "@tinacms/auth": "^1.0.2"
+  },
+  "devDependencies": {
+    "@tinacms/cli": "^1.5.30",
+    "tinacms": "^1.5.21",
+    "http-server": "^14.1.1"
   }
 }

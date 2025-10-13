@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"npx http-server . -p 3000\"",
     "serve": "npx http-server . -p 3000",
-    "build": "echo 'No build process needed for static site",
+    "build": "echo 'No build process needed for static site'",
     "deploy": "vercel --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

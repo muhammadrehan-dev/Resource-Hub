@@ -1,3 +1,8 @@
+// Prevent Monaco from loading in server builds (Vercel)
+if (typeof window === "undefined") {
+  global.window = {};
+}
+
 import { defineConfig } from "tinacms";
 
 // Your hosting provider likely exposes this as an environment variable

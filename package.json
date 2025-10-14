@@ -38,6 +38,12 @@
     "cross-env": "^7.0.3",
     "node-fetch": "^2.7.0"
   },
+"overrides": {
+  "@monaco-editor/react": "4.4.6",
+  "@monaco-editor/loader": "1.3.2"
+},
+
+  
   "devDependencies": {
     "@tinacms/cli": "^1.5.30",
     "tinacms": "^1.5.21",

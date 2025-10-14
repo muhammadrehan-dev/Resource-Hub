@@ -1,29 +1,46 @@
 {
   "name": "resource-hub",
-  "version": "2.1.1",
-  "private": true,
+  "version": "2.2.0",
+  "description": "DUET Resource Hub - Batch 25F Cybersecurity A2 with Tina CMS (Cloud Mode)",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "tinacms build || echo 'No static build step required for Tina Cloud content'",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "deploy": "vercel --prod"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/muhammadrehan-dev/Resource-Hub.git"
+  },
+  "keywords": [
+    "duet",
+    "resource-hub",
+    "cybersecurity",
+    "education",
+    "cms",
+    "tinacms"
+  ],
+  "author": "TH3 CUT3 V1RU5",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muhammadrehan-dev/Resource-Hub/issues"
+  },
+  "homepage": "https://25fcyber.vercel.app",
   "dependencies": {
-    "@tinacms/cli": "1.5.4",
-    "@tinacms/app": "1.5.4",
-    "@tinacms/toolkit": "1.5.4",
-    "next": "14.2.10",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "@monaco-editor/react": "4.5.2",
-    "@monaco-editor/loader": "1.4.0",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.10"
+    "next": "14.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tinacms": "^1.5.21",
+    "@tinacms/auth": "^1.0.2",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "@tinacms/cli": "1.5.4",
+    "@tinacms/app": "1.5.4",
+    "@tinacms/toolkit": "1.5.4"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=18.0.0"
   }
 }

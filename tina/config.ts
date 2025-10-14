@@ -1,8 +1,3 @@
-// Prevent Monaco from loading in server builds (Vercel)
-if (typeof window === "undefined") {
-  global.window = {};
-}
-
 import { defineConfig } from "tinacms";
 
 // Your hosting provider likely exposes this as an environment variable
@@ -17,12 +12,12 @@ export default defineConfig({
   token: process.env.TINA_TOKEN || "", // Get this from tina.io
   build: {
     outputFolder: "admin",
-    publicFolder: "",
+    publicFolder: "public",
   },
   media: {
     tina: {
-      mediaRoot: "content/uploads",
-      publicFolder: "",
+      mediaRoot: "uploads",
+      publicFolder: "public",
     },
   },
   schema: {
@@ -171,7 +166,7 @@ export default defineConfig({
       {
         name: "subjects",
         label: "Subject Materials",
-        path: "subjects",
+        path: "content/subjects",
         format: "md",
         fields: [
           {

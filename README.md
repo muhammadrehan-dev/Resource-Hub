@@ -1,153 +1,307 @@
-# 🎓 DUET Resource Hub - Batch 25F Cyber A2
+# 🎓 DUET Resource Hub
 
-[![Netlify Status](https://img.shields.io/badge/netlify-deployed-success?style=flat-square)](https://25fcyber.netlify.app/)
-[![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red?style=flat-square)](https://25fcyber.netlify.app/)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+**Official resource hub for Batch 25F Cybersecurity A2 at Dawood University of Engineering and Technology (DUET)**
 
-A centralized resource hub for **Batch 25F Cybersecurity A2** students at Dawood University of Engineering and Technology (DUET). Access all your course materials, lecture notes, and study resources in one beautiful, organized platform.
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-active-success.svg)
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Push Notifications](#push-notifications)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+## 🌟 Overview
+
+DUET Resource Hub is a centralized platform designed to provide Batch 25F Cybersecurity A2 students with easy access to:
+- 📚 Subject materials and lecture notes
+- 📰 Latest news and announcements
+- 📅 Deadline tracking and reminders
+- 🔔 Push notifications for important updates
 
 ## ✨ Features
 
-- 🎨 **Modern UI/UX** - Clean, responsive design with smooth animations
-- 📱 **Mobile First** - Fully responsive across all devices
-- 🚀 **Fast Loading** - Optimized performance with CDN resources
-- 🔍 **SEO Optimized** - Comprehensive meta tags and structured data
-- ♿ **Accessible** - ARIA labels and semantic HTML
-- 🎯 **Direct Links** - Quick access to Google Drive folders for each subject
+### Core Features
+- **📖 Subject Materials**: Organized resources for all courses
+  - Applied Physics
+  - ICT
+  - Programming
+  - English
+  - Calculus
+  - Islamiat
 
-## 📚 Available Subjects
+- **📰 News & Announcements**: Stay updated with the latest class information
+  - Real-time news loading from GitHub
+  - Categorized updates (General, Urgent, Exam, Assignment)
+  - Automatic archiving after 30 days
 
-- ⚛️ Applied Physics
-- 💻 ICT (Information and Communication Technology)
-- 👨‍💻 Programming
-- 📖 English
-- ➗ Calculus
-- 🕌 Islamiat
+- **⏰ Deadline Management**: Never miss a submission
+  - Visual countdown timers
+  - Priority-based organization
+  - Automatic expiration tracking
+  - Direct submission links
+
+- **🔔 Push Notifications**: Powered by OneSignal
+  - Deadline reminders (24 hours before due date)
+  - Important news alerts
+  - Cross-platform support
+
+### UI/UX Features
+- ⚡ Fast loading with skeleton loaders
+- 🎨 Modern, responsive design
+- 📱 Mobile-friendly interface
+- 🌐 SEO optimized
+- ♿ Accessible navigation
+- 🎭 Smooth animations with AOS
 
 ## 🛠️ Tech Stack
 
-- **HTML5** - Semantic markup
-- **CSS3** - Modern styling with animations
-- **JavaScript** - Interactive functionality
-- **AOS Library** - Scroll animations
-- **Font Awesome** - Icons
-- **Google Fonts** - Poppins typography
+### Frontend
+- **HTML5**: Semantic markup
+- **CSS3**: Custom styling with CSS variables
+- **JavaScript (ES6+)**: Vanilla JS for functionality
+- **AOS Library**: Scroll animations
+- **Font Awesome**: Icon library
+- **Marked.js**: Markdown parsing
 
-## 🚀 Getting Started
+### Backend/CMS
+- **Tina CMS**: Content management
+- **GitHub API**: Content delivery
+- **Vercel Serverless Functions**: API endpoints
+
+### Services
+- **OneSignal**: Push notifications
+- **Google Analytics**: Traffic tracking
+- **Counter.dev**: Simple analytics
+
+## 📦 Installation
 
 ### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+- Git
 
-- A modern web browser
-- Internet connection (for CDN resources)
-
-### Installation
+### Steps
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/muhammadrehan-dev/resource-hub.git
-   cd resource-hub
-   ```
+```bash
+git clone https://github.com/muhammadrehan-dev/Resource-Hub.git
+cd Resource-Hub
+```
 
-2. **Update Google Drive Links**
-   
-   Open `script.js` and update the `googleDriveLinks` object with your folder URLs:
-   ```javascript
-   const googleDriveLinks = {
-       'Applied Physics': 'YOUR_DRIVE_LINK_HERE',
-       'ICT': 'YOUR_DRIVE_LINK_HERE',
-       // ... update other subjects
-   };
-   ```
+2. **Install dependencies**
+```bash
+npm install
+```
 
-3. **Deploy**
-   
-   Simply upload to any static hosting service:
-   - Netlify (recommended)
-   - GitHub Pages
-   - Vercel
-   - Or open `index.html` locally
+3. **Set up environment variables**
+
+Create a `.env` file in the root directory:
+```env
+ONESIGNAL_API_KEY=your_onesignal_api_key
+ONESIGNAL_APP_ID=your_onesignal_app_id
+```
+
+4. **Start development server**
+```bash
+npm run dev
+```
+
+5. **Open in browser**
+```
+http://localhost:3000
+```
+
+## 🚀 Usage
+
+### Running Locally
+
+**Development mode with Tina CMS:**
+```bash
+npm run dev
+```
+
+**Simple HTTP server:**
+```bash
+npm run serve
+```
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+### Deploying to Vercel
+
+```bash
+npm run deploy
+```
+
+Or connect your GitHub repository to Vercel for automatic deployments.
 
 ## 📁 Project Structure
 
 ```
-resource-hub/
-├── index.html          # Main HTML file
-├── styles.css          # Stylesheet
-├── script.js           # JavaScript functionality
-├── logo.png           # University logo
-├── sitemap.xml        # SEO sitemap
-├── robots.txt         # Search engine instructions
-├── site.webmanifest   # PWA manifest
-├── _headers           # Security headers (Netlify)
-├── .gitignore         # Git ignore rules
-└── README.md          # This file
+Resource-Hub/
+├── index.html                 # Homepage
+├── styles.css                 # Global styles
+├── script.js                  # Homepage functionality
+├── package.json              # Dependencies
+├── vercel.json               # Vercel configuration
+│
+├── api/
+│   └── send-notification.js  # OneSignal API endpoint
+│
+├── content/
+│   ├── news/
+│   │   ├── index.html        # News page
+│   │   ├── news.css          # News styles
+│   │   ├── news.js           # News functionality
+│   │   └── *.md              # News articles
+│   │
+│   └── deadlines/
+│       ├── index.html        # Deadlines page
+│       ├── deadlines.css     # Deadline styles
+│       ├── deadlines.js      # Deadline functionality
+│       └── *.md              # Deadline entries
+│
+├── subjects/
+│   ├── applied-physics/
+│   ├── ict/
+│   ├── programming/
+│   ├── english/
+│   ├── calculus/
+│   └── islamiat/
+│
+└── admin/                    # Tina CMS admin panel
 ```
 
-## 🎨 Customization
+## ⚙️ Configuration
 
-### Changing Colors
+### OneSignal Setup
 
-Edit CSS variables in `styles.css`:
-```css
-:root {
-    --primary-color: #00bcd4;
-    --primary-dark: #0097a7;
-    --primary-light: #b2ebf2;
-}
+1. Create an account at [OneSignal](https://onesignal.com)
+2. Create a new web push app
+3. Get your App ID and REST API Key
+4. Update the following files:
+
+**index.html (line 163):**
+```javascript
+await OneSignal.init({
+  appId: "YOUR_ONESIGNAL_APP_ID_HERE",
+});
 ```
 
-### Adding New Subjects
+**Environment variables:**
+```env
+ONESIGNAL_API_KEY=your_rest_api_key
+ONESIGNAL_APP_ID=your_app_id
+```
 
-1. Add a new card in `index.html`
-2. Update the `googleDriveLinks` object in `script.js`
-3. Choose an icon from [Font Awesome](https://fontawesome.com/icons)
+### Google Analytics
 
-## 📊 Analytics
+Replace the tracking ID in `index.html` (line 7):
+```javascript
+gtag('config', 'YOUR-GA-TRACKING-ID');
+```
 
-The site includes:
-- Google Analytics (G-J9BSZY0FVR)
-- Counter.dev visitor tracking
+### Content Management
 
-Update tracking IDs in `index.html` as needed.
+Content is managed through:
+1. **Tina CMS**: Access via `/admin` route
+2. **Direct Markdown**: Edit `.md` files in `content/` directories
 
-## 🔒 Security
+## 🔔 Push Notifications
 
-Security headers are configured in `_headers`:
-- X-Frame-Options: DENY
-- X-Content-Type-Options: nosniff
-- Referrer-Policy: strict-origin-when-cross-origin
-- Permissions-Policy restrictions
+### Automatic Deadline Reminders
+- Checks every hour for deadlines within 24 hours
+- Sends notifications automatically via OneSignal
+- Configurable in `content/deadlines/deadlines.js`
+
+### Manual Notifications
+Send via the serverless function:
+```javascript
+fetch('/.netlify/functions/send-notification', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    title: 'Your Title',
+    message: 'Your Message',
+    url: 'https://your-url.com'
+  })
+})
+```
+
+## 🌐 Deployment
+
+### Vercel (Recommended)
+
+1. **Connect GitHub repository**
+   - Go to [Vercel Dashboard](https://vercel.com)
+   - Import your repository
+
+2. **Configure environment variables**
+   - Add `ONESIGNAL_API_KEY`
+   - Add `ONESIGNAL_APP_ID`
+
+3. **Deploy**
+   - Automatic deployments on push to main branch
+
+### Netlify
+
+1. Connect repository
+2. Configure build settings:
+   - Build command: `npm run build`
+   - Publish directory: `.`
+3. Add environment variables
+4. Deploy
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how:
+Contributions are welcome! Here's how you can help:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch**
+```bash
+git checkout -b feature/AmazingFeature
+```
 
-## 📝 To-Do
+3. **Commit your changes**
+```bash
+git commit -m 'Add some AmazingFeature'
+```
 
-- [ ] Add dark mode toggle
-- [ ] Implement search/filter functionality
-- [ ] Add PWA offline support
-- [ ] Create admin panel for easy link updates
-- [ ] Add assignment deadline tracker
-- [ ] Include exam schedule
+4. **Push to the branch**
+```bash
+git push origin feature/AmazingFeature
+```
 
-## 👨‍💻 Developer
+5. **Open a Pull Request**
 
-**Muhammad Rehan** (TH3 CUT3 V1RU5)
+### Contribution Guidelines
+- Follow existing code style
+- Test your changes thoroughly
+- Update documentation as needed
+- Add meaningful commit messages
 
-- 📧 Email: muhammadrehan78633@gmail.com
-- 📱 WhatsApp: +92 322 968 0603
-- 🌐 Website: [25fcyber.netlify.app](https://25fcyber.netlify.app)
-
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**TH3 CUT3 V1RU5**
+- GitHub: [@muhammadrehan-dev](https://github.com/muhammadrehan-dev)
 
 ## 🙏 Acknowledgments
 
@@ -157,15 +311,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-For any issues or questions:
+For support, please:
 - Open an issue on GitHub
-- Contact via email or WhatsApp
-- Join our batch group discussions
+- Contact the development team
+- Check the documentation
+
+## 🔗 Links
+
+- **Live Site**: [https://25fcyber.vercel.app](https://25fcyber.vercel.app)
+- **Repository**: [https://github.com/muhammadrehan-dev/Resource-Hub](https://github.com/muhammadrehan-dev/Resource-Hub)
+- **DUET Website**: [https://duet.edu.pk](https://duet.edu.pk)
 
 ---
 
-<div align="center">
-Made with ❤️ for A2 Cybersecurity Batch 25F
+Made with ❤️ for students of A2 Cybersecurity Batch 25F
 
-⭐ Star this repo if you found it helpful!
-</div>
+**⭐ Star this repository if you find it helpful!**

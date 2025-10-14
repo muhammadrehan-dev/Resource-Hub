@@ -3,19 +3,19 @@
   "version": "2.3.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "tinacms dev -c \"next dev\"",
+    "build": "tinacms build && next build",
     "start": "next start"
   },
   "dependencies": {
     "next": "14.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "tinacms": "^1.5.21",
-    "@tinacms/app": "^1.5.4",
-    "@tinacms/auth": "^1.0.2",
-    "@tinacms/cli": "^1.5.4",
-    "@tinacms/toolkit": "^1.5.4"
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tinacms": "^2.2.0",
+    "@tinacms/cli": "^1.6.0"
+  },
+  "devDependencies": {
+    "@tinacms/auth": "^1.0.2"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,14 +1,26 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "installCommand": "npm install --legacy-peer-deps",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    },
+    {
+      "source": "/((?!admin).*)",
       "headers": [
         { "key": "X-Frame-Options", "value": "DENY" }
       ]
+    }
+  ],
+  "routes": [
+    {
+      "src": "/admin",
+      "dest": "/admin/index.html"
     }
   ]
 }

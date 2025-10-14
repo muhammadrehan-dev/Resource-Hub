@@ -1,15 +1,13 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".",
   "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        }
+        { "key": "X-Frame-Options", "value": "DENY" }
       ]
     }
   ]

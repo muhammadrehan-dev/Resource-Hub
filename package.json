@@ -1,14 +1,16 @@
 {
   "name": "resource-hub",
-  "version": "2.0.0",
-  "description": "DUET Resource Hub - Batch 25F Cybersecurity A2 with Tina CMS",
+  "version": "2.1.0",
+  "description": "DUET Resource Hub - Batch 25F Cybersecurity A2 powered by TinaCMS",
   "main": "index.html",
   "scripts": {
-    "dev": "tinacms dev -c \"npx http-server . -p 3000\"",
+    "dev": "cross-env NODE_ENV=development tinacms dev -c \"npx http-server . -p 3000\"",
     "serve": "npx http-server . -p 3000",
-    "build": "echo 'No build process needed for static site'",
+    "build": "tinacms build || echo 'No static build step required for Tina Cloud content'",
+    "preview": "npx http-server . -p 4173",
     "deploy": "vercel --prod",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf .next dist node_modules/.cache",
+    "test": "echo \"No automated tests configured yet\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -19,21 +21,31 @@
     "resource-hub",
     "cybersecurity",
     "education",
-    "cms"
+    "cms",
+    "tina",
+    "tina-cms",
+    "vercel",
+    "static-site"
   ],
-  "author": "TH3 CUT3 V1RU5",
+  "author": "TH3 CUT3 V1RU5 <muhammadrehan-dev>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/muhammadrehan-dev/Resource-Hub/issues"
   },
   "homepage": "https://25fcyber.vercel.app",
   "dependencies": {
-    "node-fetch": "^2.7.0",
-    "@tinacms/auth": "^1.0.2"
+    "@tinacms/auth": "^1.0.2",
+    "cross-env": "^7.0.3",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@tinacms/cli": "^1.5.30",
     "tinacms": "^1.5.21",
-    "http-server": "^14.1.1"
-  }
+    "http-server": "^14.1.1",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": false
 }

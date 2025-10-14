@@ -8,6 +8,15 @@
       "description": "Submit Your ICT assignments",
       "priority": "high",
       "submissionLink": ""
+    },
+        {
+      
+      "title": "Handwritten Assignment",
+      "subject": "ICT",
+      "dueDate": "2025-10-21T12:59:00",
+      "description": "Submit Your ICT Handwritten assignments",
+      "priority": "high",
+      "submissionLink": ""
     }
   ]
 }

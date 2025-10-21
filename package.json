@@ -1,13 +1,13 @@
 {
-  "name": "resource-hub" ,
+  "name": "resource-hub",
   "version": "2.3.0",
   "private": true,
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && next build",
+   "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  },
+  }
   "dependencies": {
     "next": "14.2.5",
     "react": "18.3.1",

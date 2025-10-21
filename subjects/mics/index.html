@@ -396,6 +396,13 @@
                 color: '#1abc9c',
                 description: 'Islamic studies course notes'
             }
+            ,
+            'mics': {
+                name: 'Important Stuff',
+                icon: 'fas fa-star',
+                color: '#1abc9c',
+                description: 'Past Papers and Other Important Materials'
+            }
         };
 
         // GitHub configuration
@@ -406,9 +413,11 @@
         // Standard subfolders to look for
         const SUBFOLDERS = ['books', 'lectures', 'code', 'presentations'];
 
-        // Get current subject from URL
+        // Get current subject from URL (preserve original casing for paths, normalize for config lookup)
         const currentPath = window.location.pathname;
-        const subjectSlug = currentPath.split('/').filter(p => p)[1]; // Gets 'applied-physics' from '/subjects/applied-physics/'
+        const parts = currentPath.split('/').filter(p => p);
+        const originalSlug = decodeURIComponent(parts[1] || parts[0] || ''); // keep folder casing for GitHub paths
+        const subjectSlug = originalSlug.toLowerCase(); // normalized key for subjectConfig
         const config = subjectConfig[subjectSlug];
 
         // File icon mapping
@@ -466,7 +475,8 @@
             try {
                 // Fetch files for each subfolder
                 for (const folder of SUBFOLDERS) {
-                    const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${subjectSlug}/${folder}?ref=${GITHUB_BRANCH}`;
+                    // use the originalSlug (preserves folder name casing) for GitHub path
+                    const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${originalSlug}/${folder}?ref=${GITHUB_BRANCH}`;
 
                     try {
                         const response = await fetch(apiUrl);

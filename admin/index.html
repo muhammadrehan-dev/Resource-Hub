@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Panel - DUET Resource Hub</title>
-    
+
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         * {
             margin: 0;
@@ -44,27 +44,66 @@
             position: relative;
         }
 
-        /* Animated Background */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: moveBackground 20s linear infinite;
-        }
-
-        @keyframes moveBackground {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
         .container {
             max-width: 800px;
             width: 100%;
             position: relative;
             z-index: 1;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 140px;
+            height: 50px;
+            background: var(--white);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch:hover {
+            transform: scale(1.05);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 65px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .toggle-switch.urdu .toggle-slider {
+            left: 70px;
+        }
+
+        .toggle-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-dark);
         }
 
         .admin-box {
@@ -93,14 +132,7 @@
             font-size: 120px;
             color: var(--danger);
             margin-bottom: 24px;
-            animation: shake 2s infinite;
             display: inline-block;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            10%, 30%, 50%, 70%, 90% { transform: rotate(-10deg); }
-            20%, 40%, 60%, 80% { transform: rotate(10deg); }
         }
 
         h1 {
@@ -231,46 +263,14 @@
             margin-top: 24px;
         }
 
-        .floating-emojis {
-            position: absolute;
-            font-size: 40px;
-            opacity: 0.3;
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .emoji-1 {
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
-        }
-
-        .emoji-2 {
-            top: 70%;
-            right: 10%;
-            animation-delay: 1s;
-        }
-
-        .emoji-3 {
-            bottom: 15%;
-            left: 15%;
-            animation-delay: 2s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
         .hacker-text {
             font-family: 'Courier New', monospace;
             color: var(--danger);
             font-weight: bold;
-            animation: blink 1s infinite;
         }
 
-        @keyframes blink {
-            0%, 50%, 100% { opacity: 1; }
-            25%, 75% { opacity: 0.5; }
+        .hidden {
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -298,75 +298,164 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .language-toggle {
+                position: static;
+                margin-bottom: 20px;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="floating-emojis emoji-1">👀</div>
-    <div class="floating-emojis emoji-2">🔒</div>
-    <div class="floating-emojis emoji-3">📚</div>
-
     <div class="container">
+        <div class="language-toggle">
+            <div class="toggle-switch" id="languageToggle">
+                <div class="toggle-slider" id="toggleSlider">ENG</div>
+                <div class="toggle-labels">
+                    <span>ENG</span>
+                    <span>اردو</span>
+                </div>
+            </div>
+        </div>
+
         <div class="admin-box">
             <div class="warning-icon">
                 <i class="fas fa-user-secret"></i>
             </div>
-            
-            <h1>Whoa There, Curious One! 🕵️</h1>
-            <p class="subtitle">⚠️ UNAUTHORIZED ACCESS DETECTED ⚠️</p>
-            
-            <p class="message">
-                We see you trying to sneak into the admin panel! 
-                Nice try, but this area is <span class="hacker-text">TOP SECRET</span> 
-                and protected by layers of... well, let's just say you don't want to know. 😎
-            </p>
 
-            <div class="humor-box">
-                <h3><i class="fas fa-shield-alt"></i> Admin Panel? Not Your Business!</h3>
-                <ul>
-                    <li>You're here to study, not to admin-istrate! 📖</li>
-                    <li>The admin panel is more boring than a 3-hour Calculus lecture 😴</li>
-                    <li>Your job: Download files. Our job: Upload files. Let's keep it that way! 🤝</li>
-                    <li>Focus on your GPA, not the admin password! 💯</li>
-                    <li>Attempting to hack? We have your IP... just kidding (or are we?) 👁️</li>
-                </ul>
+            <!-- English Content -->
+            <div id="englishContent">
+                <h1>Whoa There, Curious One! 🕵️</h1>
+                <p class="subtitle">⚠️ UNAUTHORIZED ACCESS DETECTED ⚠️</p>
+
+                <p class="message">
+                    We see you trying to sneak into the admin panel! 
+                    Nice try, but this area is <span class="hacker-text">TOP SECRET</span> 
+                    and protected by layers of... well, let's just say you don't want to know. 😎
+                </p>
+
+                <div class="humor-box">
+                    <h3><i class="fas fa-shield-alt"></i> Admin Panel? Not Your Business!</h3>
+                    <ul>
+                        <li>You're here to study, not to admin-istrate! 📖</li>
+                        <li>The admin panel is more boring than a 3-hour Calculus lecture 😴</li>
+                        <li>Your job: Download files. Our job: Upload files. Let's keep it that way! 🤝</li>
+                        <li>Focus on your GPA, not the admin password! 💯</li>
+                        <li>Attempting to hack? We have your IP... just kidding (or are we?) 👁️</li>
+                    </ul>
+                </div>
+
+                <p class="message">
+                    Look, we know you're a <strong>Cybersecurity student</strong> and curiosity is in your DNA. 
+                    But trust us, the admin panel is just a bunch of boring file uploads and deadline entries. 
+                    <strong>Way less exciting</strong> than actually studying for your exams! 🎓
+                </p>
+
+                <div class="quote-box">
+                    <p>"With great curiosity comes great responsibility... to go back and download your lecture notes."</p>
+                    <p class="author">- TH3 CUT3 V1RU5 (probably)</p>
+                </div>
+
+                <div class="cyber-badge">
+                    <i class="fas fa-graduation-cap"></i> Batch 25F Cyber A2 - Focus Mode Activated
+                </div>
+
+                <div class="buttons">
+                    <a href="../" class="btn btn-primary">
+                        <i class="fas fa-home"></i>
+                        Take Me Home
+                    </a>
+                    <a href="../subjects/" class="btn btn-secondary">
+                        <i class="fas fa-book"></i>
+                        Go Study Instead
+                    </a>
+                </div>
+
+                <p class="message" style="margin-top: 32px; font-size: 0.95rem; color: var(--text-light);">
+                    <i class="fas fa-lightbulb"></i> 
+                    <strong>Pro Tip:</strong> If you actually need something updated on the site, 
+                    contact the admin through proper channels. No hacking required! 😊
+                </p>
             </div>
 
-            <p class="message">
-                Look, we know you're a <strong>Cybersecurity student</strong> and curiosity is in your DNA. 
-                But trust us, the admin panel is just a bunch of boring file uploads and deadline entries. 
-                <strong>Way less exciting</strong> than actually studying for your exams! 🎓
-            </p>
+            <!-- Urdu Content -->
+            <div id="urduContent" class="hidden">
+                <h1>Aye Haye, Kya Dhundne Aye Ho? 🕵️</h1>
+                <p class="subtitle">⚠️ BHAI YAHAN KUCH NAHI HAI TUMHARE LIYE ⚠️</p>
 
-            <div class="quote-box">
-                <p>"With great curiosity comes great responsibility... to go back and download your lecture notes."</p>
-                <p class="author">- TH3 CUT3 V1RU5 (probably)</p>
+                <p class="message">
+                    Dekh rahe hain bhai, admin panel mein ghusne ki koshish kar rahe ho! 
+                    Shabash, lekin yeh jagah <span class="hacker-text">STRICTLY OFF LIMITS</span> 
+                    hai aur isko itni security mili hai ke... choro yaar, tumhe samajh nahi aayega! 😎
+                </p>
+
+                <div class="humor-box">
+                    <h3><i class="fas fa-shield-alt"></i> Bhai Tu Apne Kaam Se Kaam Rakh!</h3>
+                    <ul>
+                        <li>Padhai karne aaye ho ya hacking karne? Books kholo yaar! 📖</li>
+                        <li>Admin panel Calculus ke 3 ghante lecture se bhi zyada boring hai 😴</li>
+                        <li>Tumhara kaam: Files download karo. Hamara kaam: Files upload karen. Simple! 🤝</li>
+                        <li>Password ki tension choro, GPA pe focus karo! 💯</li>
+                        <li>Hack karne ki soch rahe ho? Tumhari IP humne note kar li... mazak kar rahe hain (ya nahi?) 👁️</li>
+                    </ul>
+                </div>
+
+                <p class="message">
+                    Dekho bhai, samajh rahe hain ke tum <strong>Cybersecurity student</strong> ho aur curiosity tumhari fitrat hai. 
+                    Lekin trust karo, admin panel mein bas files upload hoti hain aur deadlines set hoti hain. 
+                    <strong>Bilkul bekaar</strong> exams ki tayari karne se! 🎓
+                </p>
+
+                <div class="quote-box">
+                    <p>"Jitni ziada curiosity, utni zyada zimmedari... wapis jao aur apne notes download karo."</p>
+                    <p class="author">- TH3 CUT3 V1RU5 (shayad)</p>
+                </div>
+
+                <div class="cyber-badge">
+                    <i class="fas fa-graduation-cap"></i> Batch 25F Cyber A2 - Padhai Mode ON Karo
+                </div>
+
+                <div class="buttons">
+                    <a href="../" class="btn btn-primary">
+                        <i class="fas fa-home"></i>
+                        Ghar Wapis Le Chalo
+                    </a>
+                    <a href="../subjects/" class="btn btn-secondary">
+                        <i class="fas fa-book"></i>
+                        Chalo Padhai Karte Hain
+                    </a>
+                </div>
+
+                <p class="message" style="margin-top: 32px; font-size: 0.95rem; color: var(--text-light);">
+                    <i class="fas fa-lightbulb"></i> 
+                    <strong>Ek Baat Suno:</strong> Agar sach mein kuch update karwana hai site pe, 
+                    toh admin se seedha baat karo. Hacking ki zarurat nahi! 😊
+                </p>
             </div>
-
-            <div class="cyber-badge">
-                <i class="fas fa-graduation-cap"></i> Batch 25F Cyber A2 - Focus Mode Activated
-            </div>
-
-            <div class="buttons">
-                <a href="../" class="btn btn-primary">
-                    <i class="fas fa-home"></i>
-                    Take Me Home
-                </a>
-                <a href="../subjects/" class="btn btn-secondary">
-                    <i class="fas fa-book"></i>
-                    Go Study Instead
-                </a>
-            </div>
-
-            <p class="message" style="margin-top: 32px; font-size: 0.95rem; color: var(--text-light);">
-                <i class="fas fa-lightbulb"></i> 
-                <strong>Pro Tip:</strong> If you actually need something updated on the site, 
-                contact the admin through proper channels. No hacking required! 😊
-            </p>
         </div>
     </div>
 
     <script>
+        const toggle = document.getElementById('languageToggle');
+        const slider = document.getElementById('toggleSlider');
+        const englishContent = document.getElementById('englishContent');
+        const urduContent = document.getElementById('urduContent');
+
+        toggle.addEventListener('click', function() {
+            this.classList.toggle('urdu');
+            
+            if (this.classList.contains('urdu')) {
+                slider.textContent = 'اردو';
+                englishContent.classList.add('hidden');
+                urduContent.classList.remove('hidden');
+            } else {
+                slider.textContent = 'ENG';
+                englishContent.classList.remove('hidden');
+                urduContent.classList.add('hidden');
+            }
+        });
+
         // Easter egg: Log message for curious developers
         console.log('%c🛑 STOP RIGHT THERE!', 'color: #e74c3c; font-size: 32px; font-weight: bold;');
         console.log('%cIf you\'re reading this, you\'re either:', 'color: #3498db; font-size: 16px;');
@@ -374,14 +463,6 @@
         console.log('%c2. Actually trying to hack (bad!)', 'color: #e74c3c; font-size: 14px;');
         console.log('%c3. The actual admin (welcome back!)', 'color: #f39c12; font-size: 14px;');
         console.log('%c\nRemember: Your real job is to ACE those exams! 📚', 'color: #9b59b6; font-size: 16px; font-weight: bold;');
-        
-        // Fun animation on click
-        document.querySelector('.warning-icon').addEventListener('click', function() {
-            this.style.animation = 'none';
-            setTimeout(() => {
-                this.style.animation = 'shake 0.5s';
-            }, 10);
-        });
     </script>
 </body>
 </html>

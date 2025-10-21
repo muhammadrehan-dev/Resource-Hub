@@ -395,12 +395,11 @@
                 icon: 'fa-mosque',
                 color: '#1abc9c',
                 description: 'Islamic studies course notes'
-            }
-            ,
+            },
             'mics': {
                 name: 'Important Stuff',
-                icon: 'fas fa-star',
-                color: '#1abc9c',
+                icon: 'fa-star',
+                color: '#ffd700',
                 description: 'Past Papers and Other Important Materials'
             }
         };
@@ -410,14 +409,17 @@
         const GITHUB_REPO = 'Resource-Hub';
         const GITHUB_BRANCH = 'main';
 
-        // Standard subfolders to look for
-        const SUBFOLDERS = ['books', 'lectures', 'code', 'presentations' , 'content' ];
+        // Standard subfolders to look for (fallback if auto-detection fails)
+        const STANDARD_SUBFOLDERS = ['books', 'lectures', 'code', 'presentations', 'content'];
 
-        // Get current subject from URL (preserve original casing for paths, normalize for config lookup)
+        // Subjects that should auto-detect all subfolders
+        const AUTO_DETECT_SUBJECTS = ['mics'];
+
+        // Get current subject from URL
         const currentPath = window.location.pathname;
         const parts = currentPath.split('/').filter(p => p);
-        const originalSlug = decodeURIComponent(parts[1] || parts[0] || ''); // keep folder casing for GitHub paths
-        const subjectSlug = originalSlug.toLowerCase(); // normalized key for subjectConfig
+        const originalSlug = decodeURIComponent(parts[1] || parts[0] || '');
+        const subjectSlug = originalSlug.toLowerCase();
         const config = subjectConfig[subjectSlug];
 
         // File icon mapping
@@ -432,7 +434,9 @@
                 'h': { icon: 'fa-file-code', class: 'code' },
                 'doc': { icon: 'fa-file-word', class: 'doc' },
                 'docx': { icon: 'fa-file-word', class: 'doc' },
-                'txt': { icon: 'fa-file-alt', class: 'doc' }
+                'txt': { icon: 'fa-file-alt', class: 'doc' },
+                'zip': { icon: 'fa-file-archive', class: 'doc' },
+                'rar': { icon: 'fa-file-archive', class: 'doc' }
             };
             return iconMap[ext] || { icon: 'fa-file', class: 'doc' };
         }
@@ -471,25 +475,44 @@
         // Load files from GitHub API
         async function loadSubjectFiles() {
             const contentContainer = document.getElementById('contentContainer');
+            let foundAnyFiles = false;
 
             try {
-                // Fetch files for each subfolder
-                for (const folder of SUBFOLDERS) {
-                    // use the originalSlug (preserves folder name casing) for GitHub path
-                    const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${originalSlug}/${folder}?ref=${GITHUB_BRANCH}`;
-
+                // Check if this subject should auto-detect all folders
+                if (AUTO_DETECT_SUBJECTS.includes(subjectSlug)) {
+                    // Auto-detect all subfolders
+                    const dirUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${originalSlug}?ref=${GITHUB_BRANCH}`;
+                    
                     try {
-                        const response = await fetch(apiUrl);
-
-                        if (response.ok) {
-                            const files = await response.json();
-
-                            if (files.length > 0) {
-                                renderFolder(folder, files);
+                        const dirResponse = await fetch(dirUrl);
+                        
+                        if (dirResponse.ok) {
+                            const items = await dirResponse.json();
+                            const detectedFolders = items
+                                .filter(item => item.type === 'dir')
+                                .map(item => item.name);
+                            
+                            console.log('Detected folders:', detectedFolders);
+                            
+                            if (detectedFolders.length > 0) {
+                                for (const folder of detectedFolders) {
+                                    const hasFiles = await loadFolder(folder);
+                                    if (hasFiles) foundAnyFiles = true;
+                                }
+                            } else {
+                                console.log('No folders found in', originalSlug);
                             }
+                        } else {
+                            console.error('Failed to fetch directory:', dirResponse.status);
                         }
                     } catch (error) {
-                        console.log(`Folder "${folder}" not found or empty`);
+                        console.error('Error auto-detecting folders:', error);
+                    }
+                } else {
+                    // Use standard subfolders for other subjects
+                    for (const folder of STANDARD_SUBFOLDERS) {
+                        const hasFiles = await loadFolder(folder);
+                        if (hasFiles) foundAnyFiles = true;
                     }
                 }
 
@@ -497,6 +520,16 @@
                 document.getElementById('loadingState').style.display = 'none';
                 document.getElementById('subjectHeader').style.display = 'block';
                 document.getElementById('searchSection').style.display = 'block';
+
+                // Show message if no files found
+                if (!foundAnyFiles) {
+                    contentContainer.innerHTML = `
+                        <div class="empty-folder">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No materials available yet. Check back later!</p>
+                        </div>
+                    `;
+                }
 
                 // Setup search
                 setupSearch();
@@ -512,6 +545,29 @@
             }
         }
 
+        // Load a specific folder and return true if files were found
+        async function loadFolder(folder) {
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${originalSlug}/${folder}?ref=${GITHUB_BRANCH}`;
+
+            try {
+                const response = await fetch(apiUrl);
+
+                if (response.ok) {
+                    const files = await response.json();
+                    const actualFiles = files.filter(f => f.type === 'file');
+
+                    if (actualFiles.length > 0) {
+                        renderFolder(folder, actualFiles);
+                        return true;
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.log(`Folder "${folder}" not found or empty`);
+                return false;
+            }
+        }
+
         // Render a folder with its files
         function renderFolder(folderName, files) {
             const contentContainer = document.getElementById('contentContainer');
@@ -521,7 +577,7 @@
             folderDiv.innerHTML = `
                 <div class="folder-header">
                     <i class="fas fa-folder"></i>
-                    ${folderName}
+                    ${folderName.replace(/-/g, ' ').replace(/_/g, ' ')}
                 </div>
                 <div class="folder-list" id="folder-${folderName}"></div>
             `;

@@ -1,7 +1,6 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
-  "outputDirectory": ".next",
   "framework": "nextjs",
   "headers": [
     {
@@ -11,16 +10,16 @@
       ]
     },
     {
-      "source": "/((?!admin).*)",
+      "source": "/(.*)",
       "headers": [
         { "key": "X-Frame-Options", "value": "DENY" }
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/admin",
-      "dest": "/admin/index.html"
+      "source": "/admin",
+      "destination": "/admin/index.html"
     }
   ]
 }

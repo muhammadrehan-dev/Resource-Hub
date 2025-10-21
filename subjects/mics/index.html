@@ -418,9 +418,19 @@
         // Get current subject from URL
         const currentPath = window.location.pathname;
         const parts = currentPath.split('/').filter(p => p);
-        const originalSlug = decodeURIComponent(parts[1] || parts[0] || '');
+        let originalSlug = decodeURIComponent(parts[1] || parts[0] || '');
+        
+        // Special handling: ensure 'mics' is always lowercase for GitHub path
+        if (originalSlug.toLowerCase() === 'mics') {
+            originalSlug = 'mics';
+        }
+        
         const subjectSlug = originalSlug.toLowerCase();
         const config = subjectConfig[subjectSlug];
+        
+        console.log('URL parts:', parts);
+        console.log('Original slug for GitHub:', originalSlug);
+        console.log('Subject slug for config:', subjectSlug);
 
         // File icon mapping
         function getFileIcon(filename) {
@@ -478,16 +488,50 @@
             let foundAnyFiles = false;
 
             try {
+                console.log('Loading files for subject:', subjectSlug);
+                console.log('Original slug (for GitHub path):', originalSlug);
+                console.log('GitHub path will be:', `subjects/${originalSlug}`);
+                
                 // Check if this subject should auto-detect all folders
                 if (AUTO_DETECT_SUBJECTS.includes(subjectSlug)) {
                     // Auto-detect all subfolders
                     const dirUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${originalSlug}?ref=${GITHUB_BRANCH}`;
                     
+                    console.log('Fetching from URL:', dirUrl);
+                    
                     try {
                         const dirResponse = await fetch(dirUrl);
                         
+                        console.log('Response status:', dirResponse.status);
+                        console.log('Response headers:', [...dirResponse.headers.entries()]);
+                        
+                        if (dirResponse.status === 404) {
+                            console.error('404 - Path not found. Check if the path exists in GitHub.');
+                            contentContainer.innerHTML = `
+                                <div class="error-message">
+                                    <h2>Path Not Found</h2>
+                                    <p>The path <code>subjects/${originalSlug}</code> was not found in the repository.</p>
+                                    <p>Please verify the folder exists at: <a href="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/tree/${GITHUB_BRANCH}/subjects/${originalSlug}" target="_blank">GitHub Link</a></p>
+                                </div>
+                            `;
+                            document.getElementById('loadingState').style.display = 'none';
+                            return;
+                        }
+                        
+                        if (dirResponse.status === 403) {
+                            console.error('403 - Rate limited or access denied');
+                            const rateLimitInfo = {
+                                limit: dirResponse.headers.get('X-RateLimit-Limit'),
+                                remaining: dirResponse.headers.get('X-RateLimit-Remaining'),
+                                reset: dirResponse.headers.get('X-RateLimit-Reset')
+                            };
+                            console.log('Rate limit info:', rateLimitInfo);
+                        }
+                        
                         if (dirResponse.ok) {
                             const items = await dirResponse.json();
+                            console.log('Items found:', items);
+                            
                             const detectedFolders = items
                                 .filter(item => item.type === 'dir')
                                 .map(item => item.name);
@@ -496,14 +540,17 @@
                             
                             if (detectedFolders.length > 0) {
                                 for (const folder of detectedFolders) {
+                                    console.log('Loading folder:', folder);
                                     const hasFiles = await loadFolder(folder);
+                                    console.log(`Folder ${folder} has files:`, hasFiles);
                                     if (hasFiles) foundAnyFiles = true;
                                 }
                             } else {
                                 console.log('No folders found in', originalSlug);
                             }
                         } else {
-                            console.error('Failed to fetch directory:', dirResponse.status);
+                            const errorText = await dirResponse.text();
+                            console.error('Failed to fetch directory:', dirResponse.status, errorText);
                         }
                     } catch (error) {
                         console.error('Error auto-detecting folders:', error);
@@ -515,6 +562,8 @@
                         if (hasFiles) foundAnyFiles = true;
                     }
                 }
+                
+                console.log('Total files found:', foundAnyFiles);
 
                 // Show header and search
                 document.getElementById('loadingState').style.display = 'none';
@@ -549,12 +598,19 @@
         async function loadFolder(folder) {
             const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${originalSlug}/${folder}?ref=${GITHUB_BRANCH}`;
 
+            console.log('Loading folder from URL:', apiUrl);
+            
             try {
                 const response = await fetch(apiUrl);
+                
+                console.log(`Folder "${folder}" response status:`, response.status);
 
                 if (response.ok) {
                     const files = await response.json();
+                    console.log(`Files in ${folder}:`, files);
+                    
                     const actualFiles = files.filter(f => f.type === 'file');
+                    console.log(`Actual files (not dirs) in ${folder}:`, actualFiles.length);
 
                     if (actualFiles.length > 0) {
                         renderFolder(folder, actualFiles);
@@ -563,7 +619,7 @@
                 }
                 return false;
             } catch (error) {
-                console.log(`Folder "${folder}" not found or empty`);
+                console.log(`Error loading folder "${folder}":`, error);
                 return false;
             }
         }

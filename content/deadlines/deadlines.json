@@ -2,19 +2,10 @@
   "deadlines": [
     {
       
-      "title": "Word Assignment",
+      "title": "Ict Lab Assignment",
       "subject": "ICT",
       "dueDate": "2025-10-22T12:59:00",
-      "description": "Submit Your ICT assignments",
-      "priority": "high",
-      "submissionLink": ""
-    },
-        {
-      
-      "title": "Handwritten Assignment",
-      "subject": "ICT",
-      "dueDate": "2025-10-21T12:59:00",
-      "description": "Submit Your ICT Handwritten assignments",
+      "description": "Submit Your All ICT assignments",
       "priority": "high",
       "submissionLink": ""
     }

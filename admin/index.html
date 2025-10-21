@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin Panel - DUET Resource Hub</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #00bcd4;
+            --primary-dark: #0097a7;
+            --primary-light: #b2ebf2;
+            --accent-color: #00e5ff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --white: #ffffff;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .admin-box {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: floatIn 0.8s ease-out;
+        }
+
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-icon {
+            font-size: 120px;
+            color: var(--danger);
+            margin-bottom: 24px;
+            animation: shake 2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30%, 50%, 70%, 90% { transform: rotate(-10deg); }
+            20%, 40%, 60%, 80% { transform: rotate(10deg); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--danger);
+            margin-bottom: 32px;
+            font-weight: 600;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .humor-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left: 4px solid var(--warning);
+            padding: 24px;
+            border-radius: 12px;
+            margin: 32px 0;
+            text-align: left;
+        }
+
+        .humor-box h3 {
+            color: var(--warning);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .humor-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .humor-box li {
+            color: var(--text-dark);
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .humor-box li::before {
+            content: '🚫';
+            position: absolute;
+            left: 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(127, 140, 141, 0.4);
+        }
+
+        .quote-box {
+            margin-top: 32px;
+            padding: 24px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .quote-box p {
+            font-style: italic;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+
+        .quote-box .author {
+            margin-top: 12px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .cyber-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-light), rgba(0, 188, 212, 0.3));
+            color: var(--primary-dark);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 24px;
+        }
+
+        .floating-emojis {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.3;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .emoji-1 {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .emoji-2 {
+            top: 70%;
+            right: 10%;
+            animation-delay: 1s;
+        }
+
+        .emoji-3 {
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hacker-text {
+            font-family: 'Courier New', monospace;
+            color: var(--danger);
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .admin-box {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .warning-icon {
+                font-size: 80px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-emojis emoji-1">👀</div>
+    <div class="floating-emojis emoji-2">🔒</div>
+    <div class="floating-emojis emoji-3">📚</div>
+
+    <div class="container">
+        <div class="admin-box">
+            <div class="warning-icon">
+                <i class="fas fa-user-secret"></i>
+            </div>
+            
+            <h1>Whoa There, Curious One! 🕵️</h1>
+            <p class="subtitle">⚠️ UNAUTHORIZED ACCESS DETECTED ⚠️</p>
+            
+            <p class="message">
+                We see you trying to sneak into the admin panel! 
+                Nice try, but this area is <span class="hacker-text">TOP SECRET</span> 
+                and protected by layers of... well, let's just say you don't want to know. 😎
+            </p>
+
+            <div class="humor-box">
+                <h3><i class="fas fa-shield-alt"></i> Admin Panel? Not Your Business!</h3>
+                <ul>
+                    <li>You're here to study, not to admin-istrate! 📖</li>
+                    <li>The admin panel is more boring than a 3-hour Calculus lecture 😴</li>
+                    <li>Your job: Download files. Our job: Upload files. Let's keep it that way! 🤝</li>
+                    <li>Focus on your GPA, not the admin password! 💯</li>
+                    <li>Attempting to hack? We have your IP... just kidding (or are we?) 👁️</li>
+                </ul>
+            </div>
+
+            <p class="message">
+                Look, we know you're a <strong>Cybersecurity student</strong> and curiosity is in your DNA. 
+                But trust us, the admin panel is just a bunch of boring file uploads and deadline entries. 
+                <strong>Way less exciting</strong> than actually studying for your exams! 🎓
+            </p>
+
+            <div class="quote-box">
+                <p>"With great curiosity comes great responsibility... to go back and download your lecture notes."</p>
+                <p class="author">- TH3 CUT3 V1RU5 (probably)</p>
+            </div>
+
+            <div class="cyber-badge">
+                <i class="fas fa-graduation-cap"></i> Batch 25F Cyber A2 - Focus Mode Activated
+            </div>
+
+            <div class="buttons">
+                <a href="../" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    Take Me Home
+                </a>
+                <a href="../subjects/" class="btn btn-secondary">
+                    <i class="fas fa-book"></i>
+                    Go Study Instead
+                </a>
+            </div>
+
+            <p class="message" style="margin-top: 32px; font-size: 0.95rem; color: var(--text-light);">
+                <i class="fas fa-lightbulb"></i> 
+                <strong>Pro Tip:</strong> If you actually need something updated on the site, 
+                contact the admin through proper channels. No hacking required! 😊
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Easter egg: Log message for curious developers
+        console.log('%c🛑 STOP RIGHT THERE!', 'color: #e74c3c; font-size: 32px; font-weight: bold;');
+        console.log('%cIf you\'re reading this, you\'re either:', 'color: #3498db; font-size: 16px;');
+        console.log('%c1. A curious cybersecurity student (good!)', 'color: #2ecc71; font-size: 14px;');
+        console.log('%c2. Actually trying to hack (bad!)', 'color: #e74c3c; font-size: 14px;');
+        console.log('%c3. The actual admin (welcome back!)', 'color: #f39c12; font-size: 14px;');
+        console.log('%c\nRemember: Your real job is to ACE those exams! 📚', 'color: #9b59b6; font-size: 16px; font-weight: bold;');
+        
+        // Fun animation on click
+        document.querySelector('.warning-icon').addEventListener('click', function() {
+            this.style.animation = 'none';
+            setTimeout(() => {
+                this.style.animation = 'shake 0.5s';
+            }, 10);
+        });
+    </script>
+</body>
+</html>

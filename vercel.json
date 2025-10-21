@@ -1,6 +1,7 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "echo \"No build step for static site\"",
   "installCommand": "npm install --legacy-peer-deps",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/admin/(.*)",

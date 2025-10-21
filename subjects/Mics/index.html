@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subject Materials - DUET Resource Hub</title>
-
+    
     <link rel="icon" type="image/png" href="../../logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    
     <style>
         * {
             margin: 0;
@@ -463,18 +462,18 @@
         // Load files from GitHub API
         async function loadSubjectFiles() {
             const contentContainer = document.getElementById('contentContainer');
-
+            
             try {
                 // Fetch files for each subfolder
                 for (const folder of SUBFOLDERS) {
                     const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/subjects/${subjectSlug}/${folder}?ref=${GITHUB_BRANCH}`;
-
+                    
                     try {
                         const response = await fetch(apiUrl);
-
+                        
                         if (response.ok) {
                             const files = await response.json();
-
+                            
                             if (files.length > 0) {
                                 renderFolder(folder, files);
                             }
@@ -506,7 +505,7 @@
         // Render a folder with its files
         function renderFolder(folderName, files) {
             const contentContainer = document.getElementById('contentContainer');
-
+            
             const folderDiv = document.createElement('div');
             folderDiv.className = 'folder-browser';
             folderDiv.innerHTML = `
@@ -516,11 +515,11 @@
                 </div>
                 <div class="folder-list" id="folder-${folderName}"></div>
             `;
-
+            
             contentContainer.appendChild(folderDiv);
-
+            
             const folderList = document.getElementById(`folder-${folderName}`);
-
+            
             files.forEach(file => {
                 if (file.type === 'file') {
                     const iconInfo = getFileIcon(file.name);
@@ -547,7 +546,7 @@
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const allFiles = document.querySelectorAll('.folder-item');
-
+                
                 allFiles.forEach(file => {
                     const fileName = file.querySelector('.folder-name').textContent.toLowerCase();
                     file.style.display = fileName.includes(searchTerm) ? 'flex' : 'none';
